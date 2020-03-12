@@ -11,6 +11,7 @@ public class MySuccessorFunction implements SuccessorFunction {
 		Estado estado = (Estado) aState;
 		
 		for(int pet = 0; pet < estado.npet; ++pet) {
+
             int size = estado.servidores.fileLocations(pet).size();
             Iterator<Integer> it = estado.servidores.fileLocations(pet).iterator(); 
 			for(int j = 0; j < size; ++j) {
@@ -18,6 +19,15 @@ public class MySuccessorFunction implements SuccessorFunction {
                 int serv = it.next();
 				if(nuevoEstado.moverPeticion(pet, serv)){  //mover peticion pet a servidor serv
 					String s = "Peticion " + pet + " asignada al servidor " + serv;
+					retVal.add(new Successor(s, nuevoEstado));
+				}
+			}
+
+			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
+                Estado nuevoEstado = new Estado(estado);
+                int serv = it.next();
+				if(nuevoEstado.intercambiarPeticiones(pet, pet2){  //mover peticion pet a servidor serv
+					String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
 					retVal.add(new Successor(s, nuevoEstado));
 				}
 			}
