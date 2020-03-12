@@ -10,7 +10,7 @@ public class Estado {
     static Requests peticiones;
     ArrayList<Integer> asignaciones; 
 
-    public Estado(int nusu, int npet, int nserv, int nrep, int seed1, int seed2) {
+    public Estado(int nusu, int npet, int nserv, int nrep, int seed1, int seed2) throws Servers.WrongParametersException {
         this.npet = npet;
         peticiones = new Requests(nusu, npet, seed1);  //usuarios, peticiones, seed
         servidores = new Servers(nserv, nrep, seed2); //servidores, replicas, seed
