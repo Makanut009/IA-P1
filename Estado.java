@@ -18,10 +18,6 @@ public class Estado {
         peticiones = new Requests(nusu, npet, seed1);  //usuarios, peticiones, seed
         servidores = new Servers(nserv, nrep, seed2); //servidores, replicas, seed
         asignaciones = new int[npet];
-        tiempo_servidores = new int[nserv];
-        for (int i = 0; i < nserv; i++){
-            tiempo_servidores[i] = 0;
-        }
         for (int i = 0; i < npet; ++i) {
             int user = peticiones.getRequest(i)[0];
             int file = peticiones.getRequest(i)[1];
@@ -41,10 +37,6 @@ public class Estado {
     
     public Estado(Estado estat){
         asignaciones = estat.asignaciones.clone();
-        tiempo_servidores = new int[nserv];
-        for (int i = 0; i < nserv; i++){
-            tiempo_servidores[i] = 0;
-        }
     }
 
 	//Métodos
@@ -69,38 +61,24 @@ public class Estado {
             System.out.print(i + " -> " + serv + "   ");
             tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         }
-        System.out.print("Tiempo: "+ calcular_tiempo_servidores()); //calcular_tiempo_servidores());
+        System.out.print("Tiempo: "+ calcular_tiempo_servidores());
         System.out.println("\n");
     }
     
     private int calcular_tiempo_servidores(){
-        for (int i = 0; i < nserv; i++){
-            tiempo_servidores[i] = 0;
-        }
-        //System.out.println();
+
+        tiempo_servidores = new int[nserv];
         int max = 0;
         int suma = 0;
-        //System.out.println("\n Before");
-        for (int i = 0; i< nserv; ++i){
-            //System.out.println(tiempo_servidores[i]);
-        }
+
         for (int i=0; i<npet; ++i) {
             int userID = peticiones.getRequest(i)[0];
             int serverID = asignaciones[i];
             int tiempo = servidores.tranmissionTime(serverID, userID);
             tiempo_servidores[serverID] = tiempo_servidores[serverID] + tiempo;
-            if (tiempo_servidores[serverID] > max){
-                //System.out.println(max + "    " +tiempo_servidores[serverID]);
+            if (tiempo_servidores[serverID] > max)
                 max = tiempo_servidores[serverID];
-            }
-            //max = Math.max(tiempo_servidores[serverID] += tiempo, max);
-            suma+=tiempo;
-        }
-        //System.out.println("El tiempo maximo ha sido " + max);
-        //System.out.println("El maximo es : " + max + " y la suma es : " + suma);
-        //System.out.println("\nAfter");
-        for (int i = 0; i< nserv; ++i){
-            //System.out.println(tiempo_servidores[i]);
+            suma += tiempo;
         }
         return max;
     }
