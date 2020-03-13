@@ -9,7 +9,7 @@ public class Estado {
     static int nserv;
     static Servers servidores;
     static Requests peticiones;
-    static int[]  tiempo_servidores;
+    int[] tiempo_servidores;
     int[] asignaciones;
 
     public Estado(int nusu, int npet, int nserv, int nrep, int seed1, int seed2) throws Servers.WrongParametersException {
@@ -63,17 +63,24 @@ public class Estado {
             System.out.print(i + " -> " + serv + "   ");
             tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         }
-        System.out.print("Tiempo: " + tiempo_total);
+        System.out.print("Tiempo: " + calcular_tiempo_servidores());
         System.out.println("\n");
     }
     
     private int calcular_tiempo_servidores(){
         int max = 0;
+        int suma = 0;
         for (int i=0; i<npet; ++i) {
             int userID = peticiones.getRequest(i)[0];
             int serverID = asignaciones[i];
             int tiempo = servidores.tranmissionTime(serverID, userID);
-            max = Math.max(tiempo_servidores[serverID] += tiempo, max);
+            tiempo_servidores[serverID] = tiempo_servidores[serverID] + tiempo;
+            if (tiempo_servidores[serverID] > max){
+                System.out.println(tiempo);
+                    max = tiempo_servidores[serverID];
+            }
+            //max = Math.max(tiempo_servidores[serverID] += tiempo, max);
+            suma+=tiempo;
         }
         return max;
     }
