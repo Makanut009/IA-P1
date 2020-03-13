@@ -12,8 +12,10 @@ public class MySuccessorFunction implements SuccessorFunction {
 		
 		for(int pet = 0; pet < estado.npet; ++pet) {
 
-            int size = estado.servidores.fileLocations(pet).size();
-            Iterator<Integer> it = estado.servidores.fileLocations(pet).iterator(); 
+			int FileID = estado.peticiones.getRequest(pet)[1];
+
+            int size = estado.servidores.fileLocations(FileID).size();
+            Iterator<Integer> it = estado.servidores.fileLocations(FileID).iterator(); 
 			for(int j = 0; j < size; ++j) {
                 Estado nuevoEstado = new Estado(estado);
                 int serv = it.next();
@@ -23,14 +25,14 @@ public class MySuccessorFunction implements SuccessorFunction {
 				}
 			}
 
-			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
-                Estado nuevoEstado = new Estado(estado);
-                int serv = it.next();
-				if(nuevoEstado.intercambiarPeticiones(pet, pet2)){  //mover peticion pet a servidor serv
-					String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
-					retVal.add(new Successor(s, nuevoEstado));
-				}
-			}
+			// for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
+            //     Estado nuevoEstado = new Estado(estado);
+            //     int serv = it.next();
+			// 	if(nuevoEstado.intercambiarPeticiones(pet, pet2)){  //mover peticion pet a servidor serv
+			// 		String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
+			// 		retVal.add(new Successor(s, nuevoEstado));
+			// 	}
+			// }
 		}
 		return retVal;
 	}
