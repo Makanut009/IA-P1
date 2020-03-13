@@ -13,7 +13,6 @@ public class MySuccessorFunction implements SuccessorFunction {
 		for(int pet = 0; pet < estado.npet; ++pet) {
 
 			int FileID = estado.peticiones.getRequest(pet)[1];
-
             int size = estado.servidores.fileLocations(FileID).size();
             Iterator<Integer> it = estado.servidores.fileLocations(FileID).iterator(); 
 			for(int j = 0; j < size; ++j) {

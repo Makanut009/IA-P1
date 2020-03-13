@@ -70,8 +70,9 @@ public class MyProblem {
             Search search = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problema, search);
 
-            System.out.println(agent.getActions());
             System.out.println(agent.getInstrumentation());
+            //System.out.println(agent.getActions());
+            agent.getActions();
             
             Estado estat_final = (Estado) search.getGoalState();
             estat_final.imprimir_asignaciones();
