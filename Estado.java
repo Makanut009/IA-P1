@@ -39,6 +39,7 @@ public class Estado {
     
     public Estado(Estado estat){
         asignaciones = estat.asignaciones.clone();
+        tiempo_servidores = new int[nserv];
     }
 
 	//Métodos
@@ -68,6 +69,7 @@ public class Estado {
     }
     
     private int calcular_tiempo_servidores(){
+        System.out.println();
         int max = 0;
         int suma = 0;
         for (int i=0; i<npet; ++i) {
@@ -76,12 +78,13 @@ public class Estado {
             int tiempo = servidores.tranmissionTime(serverID, userID);
             tiempo_servidores[serverID] = tiempo_servidores[serverID] + tiempo;
             if (tiempo_servidores[serverID] > max){
-                System.out.println(tiempo);
-                    max = tiempo_servidores[serverID];
+                //System.out.println(tiempo);
+                max = tiempo_servidores[serverID];
             }
             //max = Math.max(tiempo_servidores[serverID] += tiempo, max);
             suma+=tiempo;
         }
+        //System.out.println("El tiempo maximo ha sido " + max);
         return max;
     }
     
