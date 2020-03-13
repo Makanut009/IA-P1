@@ -42,12 +42,20 @@ public class Estado {
     public boolean moverPeticion(int pet, int serv) {
         if (asignaciones.get(pet) == serv) return false;
         else {
-            asignaciones.add(pet, serv);
+            //if (pet es pot assignar al servidor serv)
+                asignaciones.add(pet, serv);
             return true;
         }
     }
 
     public boolean intercambiarPeticiones(int pet1, int pet2) {
-        return false;
+        if (asignaciones.get(pet1) == asignaciones.get(pet2)) return false;
+        //if (pet1 no es pot assignar al servidor de pet2) return false;
+        //if (pet2 no es pot assignar al servidor de pet1) return false;
+        else {
+            asignaciones.add(pet1, /*servidor de pet2*/);
+            asignaciones.add(pet2, /*servidor de pet1*/);
+            return true;
+        }
     }
 }
