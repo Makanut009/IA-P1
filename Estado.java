@@ -46,4 +46,8 @@ public class Estado {
             return true;
         }
     }
+
+    public boolean intercambiarPeticiones(int pet1, int pet2) {
+        return false;
+    }
 }
