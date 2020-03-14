@@ -127,10 +127,16 @@ public class Estado {
         int[] maxMin = calcular_tiempo_servidores();
         int max =maxMin[0];
         int min = maxMin[1];
+        boolean minZero = min==0;
         double entropia = 0.0;
-        if (min==0) min = 1;
+        
         for (int i=0; i<nserv; ++i) {
-            double aux = (double)tiempo_servidores[i]/(double) (min);
+            double aux;
+            if (minZero)
+            aux = (double)tiempo_servidores[i]/(double) (0.65);
+            else{
+                aux = (double)tiempo_servidores[i]/(double) (min);
+            }
             if (aux != 0) entropia = entropia + aux*Math.log(aux);
         }
         // int suma = maxMin[2];
