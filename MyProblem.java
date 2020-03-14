@@ -49,12 +49,20 @@ public class MyProblem {
                 // if (in.nextInt() == 1) heuristico = 1;
                 // else heuristico = 2;
 
+                System.out.println("Hill Climbing");
+
                 MyHillClimbingSearch(estado, 1);
 
                 //Estado estado2 = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
                 //estado2.generaSolInicial1();
                 MyHillClimbingSearch(estado, 2);
+                
 
+                System.out.println("Annealing");
+
+                MySimulatedAnnealingSearch(estado, 1);
+
+                MySimulatedAnnealingSearch(estado, 2);
                 // if (ops == 1) MyHillClimbingSearch(estado, heuristico);
                 // else MySimulatedAnnealingSearch(estado, heuristico);
 
@@ -103,6 +111,9 @@ public class MyProblem {
 
             //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).toString());
             //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).correspondenciasToString());
+            Estado estado_final = (Estado) search.getGoalState();
+            estado_final.imprimir_asignaciones();
+            estado_final.imprimir_tiempos();
 
         } catch (Exception e) {
             e.printStackTrace();
