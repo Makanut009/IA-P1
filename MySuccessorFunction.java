@@ -24,14 +24,18 @@ public class MySuccessorFunction implements SuccessorFunction {
 				}
 			}
 
-			// for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
-            //     Estado nuevoEstado = new Estado(estado);
-            //     int serv = it.next();
-			// 	if(nuevoEstado.intercambiarPeticiones(pet, pet2)){  //mover peticion pet a servidor serv
-			// 		String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
-			// 		retVal.add(new Successor(s, nuevoEstado));
-			// 	}
-			// }
+			it = estado.servidores.fileLocations(FileID).iterator(); 
+
+			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
+				if (pet!=pet2){
+                Estado nuevoEstado = new Estado(estado);
+
+					if(nuevoEstado.intercambiarPeticiones(pet, pet2)){  //mover peticion pet a servidor serv
+						String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
+						retVal.add(new Successor(s, nuevoEstado));
+					}
+				}
+			}
 		}
 		return retVal;
 	}

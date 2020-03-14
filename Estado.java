@@ -152,14 +152,23 @@ public class Estado {
         }
     }
 
-    // public boolean intercambiarPeticiones(int pet1, int pet2) {
-    //     if (asignaciones.get(pet1) == asignaciones.get(pet2)) return false;
-    //     //if (pet1 no es pot assignar al servidor de pet2) return false;
-    //     //if (pet2 no es pot assignar al servidor de pet1) return false;
-    //     else {
-    //         asignaciones.add(pet1, /*servidor de pet2*/);
-    //         asignaciones.add(pet2, /*servidor de pet1*/);
-    //         return true;
+    public boolean intercambiarPeticiones(int pet1, int pet2) {
+        if (asignaciones[pet1] == asignaciones[pet2]) return false; //Servidor compartido
+        
+        int file1 = peticiones.getRequest(pet1)[1];
+        int file2 = peticiones.getRequest(pet2)[1];
+
+        Set<Integer> lista1 = servidores.fileLocations(file1);
+        Set<Integer> lista2 = servidores.fileLocations(file2);
+
+        if (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1])) {
+            int aux = asignaciones[pet1];
+            asignaciones[pet1] = asignaciones[pet2];
+            asignaciones[pet2] = aux;
+            return true;
+        }
+        return false;
+    }
     //     }
     // }
 }
