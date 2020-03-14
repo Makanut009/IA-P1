@@ -18,20 +18,19 @@ public class Estado {
         peticiones = new Requests(nusu, npet, seed1);  //usuarios, peticiones, seed
         servidores = new Servers(nserv, nrep, seed2); //servidores, replicas, seed
         asignaciones = new int[npet];
+
         for (int i = 0; i < npet; ++i) {
-            int user = peticiones.getRequest(i)[0];
-            int file = peticiones.getRequest(i)[1];
+            int UserID = peticiones.getRequest(i)[0];
+            int FileID = peticiones.getRequest(i)[1];
+            Iterator<Integer> it = servidores.fileLocations(FileID).iterator();
 
-            Iterator<Integer> it = servidores.fileLocations(file).iterator();
-
-            System.out.println("La peticion " + i + " tiene como usuario "+user+" y fichero " +file); 
-            System.out.println("El fichero mencionado se encuentra en los servidores :");
+            System.out.println("La peticion " + i + " tiene como usuario "+ UserID +" y fichero " + FileID); 
+            System.out.println("El fichero mencionado se encuentra en los servidores:");
             while(it.hasNext()){
                 int serv = it.next();
-                System.out.println("  " + serv + " que tardaria "+ servidores.tranmissionTime(serv,user) + "ms");
+                System.out.println("  " + serv + " que tardaria "+ servidores.tranmissionTime(serv, UserID) + "ms");
             }
-            //System.out.println(asignaciones.get(i));
-            //System.out.println();
+            System.out.println();
         }
     }
     
@@ -44,7 +43,7 @@ public class Estado {
         return false;
     }
 
-    public void generaSolInicial() {
+    public void generaSolInicial1() {
         
         for (int i=0; i<npet; ++i) {
             int fileID = peticiones.getRequest(i)[1];
@@ -54,6 +53,10 @@ public class Estado {
         imprimir_asignaciones();
     }
 
+    public void generaSolInicial2() {
+        //Segona opció de generació inicial de solució
+    }
+
     public void imprimir_asignaciones() {
         int tiempo_total = 0;
         for (int i=0; i<asignaciones.length; ++i){
@@ -61,11 +64,11 @@ public class Estado {
             System.out.print(i + " -> " + serv + "   ");
             tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         }
-        System.out.print("Tiempo: "+ calcular_tiempo_servidores());
+        System.out.print("Tiempo: "+ calcular_tiempo_servidores(false));
         System.out.println("\n");
     }
     
-    private int calcular_tiempo_servidores(){
+    private int calcular_tiempo_servidores(boolean bool){
 
         tiempo_servidores = new int[nserv];
         int max = 0;
@@ -80,11 +83,16 @@ public class Estado {
                 max = tiempo_servidores[serverID];
             suma += tiempo;
         }
-        return max;
+        if (bool) return max;
+        else return suma;
     }
     
-    public double getHeuristicValue() {
-        return (double) calcular_tiempo_servidores();
+    public double getHeuristicValue1() { //Devuelve el tiempo máximo de todos los servidores
+        return (double) calcular_tiempo_servidores(true);
+    }
+
+    public double getHeuristicValue2() { //Devuelve la suma total de tiempo de todos los servidores (de momento)
+        return (double) calcular_tiempo_servidores(false);
     }
     
     public boolean moverPeticion(int pet, int serv) {

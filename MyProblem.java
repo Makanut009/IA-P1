@@ -15,43 +15,45 @@ public class MyProblem {
         int ops = 0;
         while (ops != 3) {
             mostrar_opciones();
-            ops = 1;//in.nextInt();
+            ops = in.nextInt();
             if (ops == 1 || ops == 2) {
             
                 System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                int seed1 = in.nextInt();
+                int seed1 = -1; //in.nextInt();
                 if (seed1 < 0) seed1 = random.nextInt();
                 else seed1 = random.nextInt(10000);
                 
                 System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                int seed2 = in.nextInt();
+                int seed2 = -1; //in.nextInt();
                 if (seed2 < 0) seed2 = random.nextInt();
                 else seed2 = random.nextInt(10000);
                 
                 System.out.println("Introduce el número de usuarios:");
-                int nusu = 5;//in.nextInt();
+                int nusu = 5; //in.nextInt();
                 System.out.println("Introduce el número de peticiones:");
-                int npet = 10;//in.nextInt();
+                int npet = 10; //in.nextInt();
                 System.out.println("Introduce el número de servidores:");
-                int nserv = 5;//in.nextInt();
+                int nserv = 5; //in.nextInt();
                 System.out.println("Introduce el número mínimo de réplicas:");
-                int nrep = 2;//in.nextInt();
+                int nrep = 2; //in.nextInt();
                 
                 
                 Estado estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
                 
-                //System.out.println("Si deseas usar el generador de soluciones iniciales 1, introduce '1'; si deseas usar el generador 2, introduce cualquier otro número:");
-                //if (in.nextInt() == 1) estat.generaSolInicial1();
-                //else estat.generaSolInicial2();
+                // System.out.println("Si deseas usar el generador de soluciones iniciales 1, introduce '1'; si deseas usar el generador 2, introduce cualquier otro número:");
+                /* if (in.nextInt() == 1)*/ estado.generaSolInicial1();
+                // else estado.generaSolInicial2();            
                 
-                estado.generaSolInicial();                
-                
-                //System.out.println("Si deseas usar la función heurística 1, introduce '1'; si deseas usar la función heurística 2, introduce cualquier otro número:");
-                //if (in.nextInt() == 1) felicidad = false;
-                //else felicidad = true;
+                // int heuristico = 0;
+                // System.out.println("Si deseas usar la función heurística 1, introduce '1'; si deseas usar la función heurística 2, introduce cualquier otro número:");
+                // if (in.nextInt() == 1) heuristico = 1;
+                // else heuristico = 2;
 
-                if (ops == 1) MyHillClimbingSearch(estado);
-                //else MySimulatedAnnealingSearch(estado);
+                MyHillClimbingSearch(estado, 1);
+                MyHillClimbingSearch(estado, 2);
+
+                // if (ops == 1) MyHillClimbingSearch(estado, heuristico);
+                // else MySimulatedAnnealingSearch(estado, heuristico);
 
             }
         }
@@ -63,10 +65,13 @@ public class MyProblem {
         System.out.println("Salir: 3");
     }
 
-    private static void MyHillClimbingSearch(Estado estado) {
+    private static void MyHillClimbingSearch(Estado estado, int heuristico) {
         try {
+
             Problem problema;
-            problema = new Problem(estado, new MySuccessorFunction(), new MyGoalTest(), new MyHeuristicFunction());
+            if (heuristico == 1) problema = new Problem(estado, new MySuccessorFunction(), new MyGoalTest(), new MyHeuristicFunction1());
+            else problema = new Problem(estado, new MySuccessorFunction(), new MyGoalTest(), new MyHeuristicFunction2());
+
             Search search = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problema, search);
 
@@ -76,28 +81,28 @@ public class MyProblem {
             
             Estado estat_final = (Estado) search.getGoalState();
             estat_final.imprimir_asignaciones();
-            System.out.println((estat_final).toString());
+            //System.out.println((estat_final).toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // private static void MySimulatedAnnealingSearch(Estado estat) {
-    //     try {
-            // Problem problem;
-            // if (felicitat && succ1) problem = new Problem(estat, new AzamonSuccessorFunction(), new AzamonGoalTest(), new AzamonHeuristicFunction2());
-            // else if (felicitat) problem = new Problem(estat, new AzamonSuccessorFunction2(), new AzamonGoalTest(), new AzamonHeuristicFunction2());
-            // else if (succ1) problem = new Problem(estat, new AzamonSuccessorFunction(), new AzamonGoalTest(), new AzamonHeuristicFunction1());
-            // else problem = new Problem(estat, new AzamonSuccessorFunction2(), new AzamonGoalTest(), new AzamonHeuristicFunction1());
-            // Search search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
-            // SearchAgent agent = new SearchAgent(problem, search);
+    private static void MySimulatedAnnealingSearch(Estado estado, int heuristico) {
+        try {
 
-            // System.out.println("\n" + ((AzamonEstado) search.getGoalState()).toString());
-            // System.out.println("\n" + ((AzamonEstado) search.getGoalState()).correspondenciasToString());
+            Problem problema;
+            if (heuristico == 1) problema = new Problem(estado, new MySuccessorFunction(), new MyGoalTest(), new MyHeuristicFunction1());
+            else problema = new Problem(estado, new MySuccessorFunction(), new MyGoalTest(), new MyHeuristicFunction2());
+            
+            Search search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
+            SearchAgent agent = new SearchAgent(problema, search);
 
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+            //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).toString());
+            //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).correspondenciasToString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
