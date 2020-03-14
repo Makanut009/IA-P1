@@ -41,7 +41,7 @@ public class MyProblem {
                 Estado estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
                 
                 // System.out.println("Si deseas usar el generador de soluciones iniciales 1, introduce '1'; si deseas usar el generador 2, introduce cualquier otro número:");
-                /* if (in.nextInt() == 1)*/ estado.generaSolInicial1();
+                /* if (in.nextInt() == 1)*/ estado.generaSolInicial2();
                 // else estado.generaSolInicial2();            
                 
                 // int heuristico = 0;
@@ -108,9 +108,13 @@ public class MyProblem {
             
             Search search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
             SearchAgent agent = new SearchAgent(problema, search);
-
+            
+            System.out.println(agent.getInstrumentation());
+            System.out.println(agent.getActions());
+            
             //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).toString());
             //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).correspondenciasToString());
+            
             Estado estado_final = (Estado) search.getGoalState();
             estado_final.imprimir_asignaciones();
             estado_final.imprimir_tiempos();

@@ -45,7 +45,7 @@ public class Estado {
 
     public void generaSolInicial1() {
         
-        for (int i=0; i<npet; ++i) {
+        for (int i = 0; i < npet; ++i) {
             int fileID = peticiones.getRequest(i)[1];
             Iterator<Integer> it = servidores.fileLocations(fileID).iterator(); 
             asignaciones[i] = it.next();
@@ -56,6 +56,27 @@ public class Estado {
 
     public void generaSolInicial2() {
         //Segona opció de generació inicial de solució
+        Random random = new Random();
+
+        int[] servidores_usados = new int[nserv];
+        for (int i = 0; i < npet; i++){
+            int fileID = peticiones.getRequest(i)[1];
+            Iterator<Integer> it = servidores.fileLocations(fileID).iterator(); 
+            boolean found = false;
+            for (int j = 0; j < servidores.fileLocations(fileID).size(); j++){
+                int serv = it.next();
+                if(servidores_usados[serv] == 0){
+                    asignaciones[i] = serv;
+                    servidores_usados[serv]++;
+                    found = true;
+                }
+            }
+            if (!found) {
+                asignaciones[i] = random.nextInt(nserv);
+            }
+        }
+        imprimir_asignaciones();
+        imprimir_tiempos();
     }
 
     public void imprimir_asignaciones() {
@@ -169,6 +190,4 @@ public class Estado {
         }
         return false;
     }
-    //     }
-    // }
 }
