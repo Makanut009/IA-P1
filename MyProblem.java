@@ -50,6 +50,9 @@ public class MyProblem {
                 // else heuristico = 2;
 
                 MyHillClimbingSearch(estado, 1);
+
+                //Estado estado2 = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
+                //estado2.generaSolInicial1();
                 MyHillClimbingSearch(estado, 2);
 
                 // if (ops == 1) MyHillClimbingSearch(estado, heuristico);
@@ -79,10 +82,10 @@ public class MyProblem {
             //System.out.println(agent.getActions());
             //agent.getActions();
             
-            Estado estat_final = (Estado) search.getGoalState();
-            estat_final.imprimir_asignaciones();
+            Estado estado_final = (Estado) search.getGoalState();
+            estado_final.imprimir_asignaciones();
+            estado_final.imprimir_tiempos();
             //System.out.println((estat_final).toString());
-
         } catch (Exception e) {
             e.printStackTrace();
         }

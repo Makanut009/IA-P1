@@ -51,6 +51,7 @@ public class Estado {
             asignaciones[i] = it.next();
         }
         imprimir_asignaciones();
+        imprimir_tiempos();
     }
 
     public void generaSolInicial2() {
@@ -64,15 +65,24 @@ public class Estado {
             System.out.print(i + " -> " + serv + "   ");
             tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         }
-        System.out.print("Tiempo: "+ calcular_tiempo_servidores(false));
+        System.out.print("Tiempo: "+ calcular_tiempo_servidores()[2]);
+        System.out.println("\n");
+    }
+
+    public void imprimir_tiempos() {
+        for (int i=0; i<nserv; ++i){
+            System.out.print(i + " -> " + tiempo_servidores[i] + "   ");
+        }
         System.out.println("\n");
     }
     
-    private int calcular_tiempo_servidores(boolean bool){
+    public int[] calcular_tiempo_servidores(){
 
         tiempo_servidores = new int[nserv];
         int max = 0;
+        int min = 999999;
         int suma = 0;
+        int[] retVal = new int[3];
 
         for (int i=0; i<npet; ++i) {
             int userID = peticiones.getRequest(i)[0];
@@ -83,16 +93,49 @@ public class Estado {
                 max = tiempo_servidores[serverID];
             suma += tiempo;
         }
-        if (bool) return max;
-        else return suma;
+        for (int i=0; i<nserv; ++i) {
+            if (tiempo_servidores[i] < min)
+                min = tiempo_servidores[i];
+        }
+
+        retVal[0] = max;
+        retVal[1] = min;
+        retVal[2] = suma;
+        //System.out.println(" max min suma " + max + " " +min+ " " +  suma);
+        return retVal;
     }
     
-    public double getHeuristicValue1() { //Devuelve el tiempo máximo de todos los servidores
-        return (double) calcular_tiempo_servidores(true);
+    public double getHeuristicValue1() { //max
+        return (double) calcular_tiempo_servidores()[0];
     }
 
-    public double getHeuristicValue2() { //Devuelve la suma total de tiempo de todos los servidores (de momento)
-        return (double) calcular_tiempo_servidores(false);
+    public double getHeuristicValue2() { //max - min
+        
+        int[] ret = calcular_tiempo_servidores();
+        int max = ret[0];
+        int min = ret[1];
+        int suma = ret[2];
+
+        int heu = max - min;
+        
+        double total = (double)suma*0.2 + (double)heu*0.8;
+
+        return (double) total;
+    }
+
+    public double getHeuristicValue3() { //entropia
+        int[] maxMin = calcular_tiempo_servidores();
+        int max =maxMin[0];
+        int min = maxMin[1];
+        double entropia = 0.0;
+        if (min==0) min = 1;
+        for (int i=0; i<nserv; ++i) {
+            double aux = (double)tiempo_servidores[i]/(double) (min);
+            if (aux != 0) entropia = entropia + aux*Math.log(aux);
+        }
+        // int suma = maxMin[2];
+        // double total = (double)suma*0.5 + (double)entropia*0.5;
+        return entropia;
     }
     
     public boolean moverPeticion(int pet, int serv) {
