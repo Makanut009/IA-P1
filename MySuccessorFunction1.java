@@ -24,8 +24,6 @@ public class MySuccessorFunction1 implements SuccessorFunction {
 				}
 			}
 
-			it = estado.servidores.fileLocations(FileID).iterator(); 
-
 			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
 				if (pet!=pet2){
                 Estado nuevoEstado = new Estado(estado);
@@ -39,5 +37,4 @@ public class MySuccessorFunction1 implements SuccessorFunction {
 		}
 		return retVal;
 	}
-
 }

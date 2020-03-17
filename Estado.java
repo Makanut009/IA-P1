@@ -13,11 +13,11 @@ public class Estado {
     int[] asignaciones;
 
     public Estado(int nusu, int npet, int nserv, int nrep, int seed1, int seed2) throws Servers.WrongParametersException {
-        this.npet = npet;
         this.nserv = nserv;
-        peticiones = new Requests(nusu, npet, seed1);  //usuarios, peticiones, seed
+        peticiones = new Requests(nusu, npet, seed1);  //usuarios, peticiones max por usuario, seed
+        this.npet = peticiones.size();
         servidores = new Servers(nserv, nrep, seed2); //servidores, replicas, seed
-        asignaciones = new int[npet];
+        asignaciones = new int[this.npet];
 
         // for (int i = 0; i < npet; ++i) {
         //     int UserID = peticiones.getRequest(i)[0];
@@ -86,7 +86,7 @@ public class Estado {
         //     System.out.print(i + " -> " + serv + "   ");
         //     tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         // }
-        System.out.print(/*"Tiempo: "+*/ calcular_tiempo_servidores()[2] + " ");
+        //System.out.print(/*"Tiempo: "+*/ calcular_tiempo_servidores()[2] + " ");
         // System.out.println("\n");
     }
 

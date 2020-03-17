@@ -26,33 +26,33 @@ public class MyProblem {
                 }
 
                 System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                int seed1 = in.nextInt();
+                int seed1 = -1; //in.nextInt();
                 // if (seed1 < 0) seed1 = random.nextInt();
                 // else seed1 = random.nextInt(10000);
                 
                 System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                int seed2 = in.nextInt();
+                int seed2 = -1; //in.nextInt();
                 // if (seed2 < 0) seed2 = random.nextInt();
                 // else seed2 = random.nextInt(10000);
                 
-                System.out.println("Introduce el número de usuarios:");
-                int nusu = in.nextInt();
-                System.out.println("Introduce el número de peticiones:");
-                int npet = in.nextInt();
-                System.out.println("Introduce el número de servidores:");
-                int nserv = in.nextInt();
-                System.out.println("Introduce el número mínimo de réplicas:");
-                int nrep = in.nextInt();
+                System.out.println("Introduce el número de usuarios: 200");
+                int nusu = 200; //in.nextInt();
+                System.out.println("Introduce el número de peticiones: 5");
+                int npet = 5; //in.nextInt();
+                System.out.println("Introduce el número de servidores: 50");
+                int nserv = 50; //in.nextInt();
+                System.out.println("Introduce el número mínimo de réplicas: 5");
+                int nrep = 5; //in.nextInt();
                 
-                int sol = 0;
+                int sol = 1; //0
                 
                 while(sol!= 1 && sol!=2){
                     System.out.println("Introduce el generador de solucion inicial, 1 o 2: ");
                     sol = in.nextInt();
                 }
                 
-                System.out.println("Introduce tipo de heuristico, 1 o 2: ");
-                int heu = in.nextInt();
+                System.out.println("Introduce tipo de heuristico, 1 o 2: 1");
+                int heu = 1; //in.nextInt();
                 
                 System.out.println("Introduce tipo de successor, 1 o 2: ");
                 int succ = in.nextInt();
@@ -60,6 +60,8 @@ public class MyProblem {
 
                 System.out.println("Iteraciones que hacer sobre el problema: ");
                 int ite = in.nextInt();
+
+                long tini = System.currentTimeMillis();
 
                 for(int i = 0; i < ite;++i){
                     Estado estado;
@@ -93,6 +95,10 @@ public class MyProblem {
                     // if (ops == 1) MyHillClimbingSearch(estado, heuristico);
                     // else MySimulatedAnnealingSearch(estado, heuristico);
                 }
+
+                long tfin = System.currentTimeMillis();
+                long elapsedTime = tfin -tini;
+                //System.out.println(elapsedTime);
             }
         }
     }
@@ -110,18 +116,14 @@ public class MyProblem {
             if (heuristico == 1){
                 if(succ==1)
                     problema = new Problem(estado, new MySuccessorFunction1(), new MyGoalTest(), new MyHeuristicFunction1());
-                else{
+                else
                     problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction1());
-
-                }
             }
             else {
                 if(succ==1)
                     problema = new Problem(estado, new MySuccessorFunction1(), new MyGoalTest(), new MyHeuristicFunction2());
-                else{
+                else
                     problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction2());
-
-                }
             }
             Search search = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problema, search);
@@ -131,8 +133,8 @@ public class MyProblem {
             //agent.getActions();
             
             Estado estado_final = (Estado) search.getGoalState();
-            estado_final.imprimir_asignaciones();
-            System.out.println();
+            // // estado_final.imprimir_asignaciones();
+            // // System.out.println();
             // estado_final.imprimir_tiempos();
             //System.out.println((estat_final).toString());
         } catch (Exception e) {
@@ -171,8 +173,8 @@ public class MyProblem {
             //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).correspondenciasToString());
             
             Estado estado_final = (Estado) search.getGoalState();
-            estado_final.imprimir_asignaciones();
-            System.out.println();
+            // // estado_final.imprimir_asignaciones();
+            // // System.out.println();
             //estado_final.imprimir_tiempos();
 
         } catch (Exception e) {
