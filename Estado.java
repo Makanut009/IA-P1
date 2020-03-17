@@ -86,7 +86,7 @@ public class Estado {
         //     System.out.print(i + " -> " + serv + "   ");
         //     tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         // }
-        //System.out.print(/*"Tiempo: "+*/ calcular_tiempo_servidores()[2] + " ");
+        System.out.print(/*"Tiempo: "+*/ calcular_tiempo_servidores()[2] + " ");
         // System.out.println("\n");
     }
 

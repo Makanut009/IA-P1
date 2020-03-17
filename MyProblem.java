@@ -26,12 +26,12 @@ public class MyProblem {
                 }
 
                 System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                int seed1 = -1; //in.nextInt();
+                int seed1 = 1234; //in.nextInt();
                 // if (seed1 < 0) seed1 = random.nextInt();
                 // else seed1 = random.nextInt(10000);
                 
                 System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                int seed2 = -1; //in.nextInt();
+                int seed2 = 1234; //in.nextInt();
                 // if (seed2 < 0) seed2 = random.nextInt();
                 // else seed2 = random.nextInt(10000);
                 
@@ -133,8 +133,8 @@ public class MyProblem {
             //agent.getActions();
             
             Estado estado_final = (Estado) search.getGoalState();
-            // // estado_final.imprimir_asignaciones();
-            // // System.out.println();
+            estado_final.imprimir_asignaciones();
+            System.out.println();
             // estado_final.imprimir_tiempos();
             //System.out.println((estat_final).toString());
         } catch (Exception e) {
