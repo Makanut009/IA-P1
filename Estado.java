@@ -139,7 +139,7 @@ public class Estado {
 
         int heu = max - min;
         
-        double total = (double)suma*0.2 + (double)heu*0.8;
+        double total = (double)suma + (double)heu*0;
 
         return (double) total;
     }

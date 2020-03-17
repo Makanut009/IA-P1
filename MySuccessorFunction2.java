@@ -23,9 +23,7 @@ public class MySuccessorFunction2 implements SuccessorFunction {
 					retVal.add(new Successor(s, nuevoEstado));
 				}
 			}
-
 		}
 		return retVal;
 	}
-
 }
