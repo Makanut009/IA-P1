@@ -19,19 +19,19 @@ public class Estado {
         servidores = new Servers(nserv, nrep, seed2); //servidores, replicas, seed
         asignaciones = new int[npet];
 
-        for (int i = 0; i < npet; ++i) {
-            int UserID = peticiones.getRequest(i)[0];
-            int FileID = peticiones.getRequest(i)[1];
-            Iterator<Integer> it = servidores.fileLocations(FileID).iterator();
+        // for (int i = 0; i < npet; ++i) {
+        //     int UserID = peticiones.getRequest(i)[0];
+        //     int FileID = peticiones.getRequest(i)[1];
+        //     Iterator<Integer> it = servidores.fileLocations(FileID).iterator();
 
-            System.out.println("La peticion " + i + " tiene como usuario "+ UserID +" y fichero " + FileID); 
-            System.out.println("El fichero mencionado se encuentra en los servidores:");
-            while(it.hasNext()){
-                int serv = it.next();
-                System.out.println("  " + serv + " que tardaria "+ servidores.tranmissionTime(serv, UserID) + "ms");
-            }
-            System.out.println();
-        }
+        //     System.out.println("La peticion " + i + " tiene como usuario "+ UserID +" y fichero " + FileID); 
+        //     System.out.println("El fichero mencionado se encuentra en los servidores:");
+        //     while(it.hasNext()){
+        //         int serv = it.next();
+        //         System.out.println("  " + serv + " que tardaria "+ servidores.tranmissionTime(serv, UserID) + "ms");
+        //     }
+        //     System.out.println();
+        // }
     }
     
     public Estado(Estado estat){
@@ -51,7 +51,7 @@ public class Estado {
             asignaciones[i] = it.next();
         }
         imprimir_asignaciones();
-        imprimir_tiempos();
+        // imprimir_tiempos();
     }
 
     public void generaSolInicial2() {
@@ -76,18 +76,18 @@ public class Estado {
             }
         }
         imprimir_asignaciones();
-        imprimir_tiempos();
+        // imprimir_tiempos();
     }
 
     public void imprimir_asignaciones() {
         int tiempo_total = 0;
-        for (int i=0; i<asignaciones.length; ++i){
-            int serv = asignaciones[i];
-            System.out.print(i + " -> " + serv + "   ");
-            tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
-        }
-        System.out.print("Tiempo: "+ calcular_tiempo_servidores()[2]);
-        System.out.println("\n");
+        // for (int i=0; i<asignaciones.length; ++i){
+        //     int serv = asignaciones[i];
+        //     System.out.print(i + " -> " + serv + "   ");
+        //     tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
+        // }
+        System.out.print(/*"Tiempo: "+*/ calcular_tiempo_servidores()[2] + " ");
+        // System.out.println("\n");
     }
 
     public void imprimir_tiempos() {
