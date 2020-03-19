@@ -34,6 +34,7 @@ public class MyProblem {
                 System.out.println("Introduce el número mínimo de réplicas por fichero: 5");
                 int nrep = 5; //in.nextInt();
                 
+                System.out.println("Introduce el generador de solucion inicial, 1 o 2: 1");
                 int sol = 1; //0
                 
                 while(sol!= 1 && sol!=2){
@@ -41,27 +42,27 @@ public class MyProblem {
                     sol = in.nextInt();
                 }
                 
-                System.out.println("Introduce tipo de heuristico, 1 o 2: 2");
-                int heu = 2; //in.nextInt();
+                System.out.println("Introduce tipo de heuristico, 1 o 2 o 3: 2");
+                int heu = 1; //in.nextInt();
                 
-                System.out.println("Introduce tipo de successor, 1 o 2: ");
+                System.out.print("Introduce tipo de successor, 1, 2 o 3: ");
                 int succ = in.nextInt();
                 
-                System.out.println("Iteraciones que hacer sobre el problema: ");
-                int ite = in.nextInt();
+                System.out.println("Iteraciones que hacer sobre el problema: 10 \n");
+                int ite = 10; //in.nextInt();
 
-                for(int i = 0; i < 1;++i){
+                for(int i = 0; i < ite;++i){
+
+                    System.out.println("--- Iteración " + i + " ---");
 
                     // System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                    // int seed1 = -1;//in.nextInt();
-                    // if (seed1 < 0) seed1 = random.nextInt();
+                    int seed1 = -1;//in.nextInt();
+                    if (seed1 < 0) seed1 = random.nextInt();
                     
-                    // System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                    // int seed2 = -1;//in.nextInt();
-                    // if (seed2 < 0) seed2 = random.nextInt();
-                    int seed1 = 1234;
-                    int seed2 = 1234;
-                
+                    //System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
+                    int seed2 = -1;//in.nextInt();
+                    if (seed2 < 0) seed2 = random.nextInt();
+                    System.out.println("Semillas : " + seed1 + " " +seed2);
                     Estado estado;
                     estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
                     
@@ -83,9 +84,8 @@ public class MyProblem {
                         MySimulatedAnnealingSearch(estado, heu, succ, lambda);
 
                     long elapsedTime = System.currentTimeMillis() - tini;
-                    System.out.println(elapsedTime);
+                    System.out.println("Tiempo de ejecución: " + elapsedTime +"ms\n");
                 }
-
             }
         }
     }
@@ -103,27 +103,30 @@ public class MyProblem {
             if (heuristico == 1){
                 if(succ==1)
                     problema = new Problem(estado, new MySuccessorFunction1(), new MyGoalTest(), new MyHeuristicFunction1());
-                else
+                else if (succ==2)
                     problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction1());
+                else
+                    problema = new Problem(estado, new MySuccessorFunction3(), new MyGoalTest(), new MyHeuristicFunction1());
             }
             else {
                 if(succ==1)
                     problema = new Problem(estado, new MySuccessorFunction1(), new MyGoalTest(), new MyHeuristicFunction2());
-                else
+                else if(succ==2)
                     problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction2());
+                else
+                    problema = new Problem(estado, new MySuccessorFunction3(), new MyGoalTest(), new MyHeuristicFunction2());
             }
+
             Search search = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problema, search);
 
             System.out.println(agent.getInstrumentation());
-            System.out.println(agent.getActions());
+            // System.out.println(agent.getActions());
             //agent.getActions();
             
-            Estado estado_final = (Estado) search.getGoalState();
+            Estado estado_final = (Estado) search.getGoalState();            
             estado_final.imprimir_asignaciones();
-            System.out.println();
-            // estado_final.imprimir_tiempos();
-            //System.out.println((estat_final).toString());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

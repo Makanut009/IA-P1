@@ -23,17 +23,6 @@ public class MySuccessorFunction1 implements SuccessorFunction {
 					retVal.add(new Successor(s, nuevoEstado));
 				}
 			}
-
-			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
-				if (pet!=pet2){
-                Estado nuevoEstado = new Estado(estado);
-
-					if(nuevoEstado.intercambiarPeticiones(pet, pet2)){  //mover peticion pet a servidor serv
-						String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
-						retVal.add(new Successor(s, nuevoEstado));
-					}
-				}
-			}
 		}
 		return retVal;
 	}

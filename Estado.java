@@ -80,14 +80,13 @@ public class Estado {
     }
 
     public void imprimir_asignaciones() {
-        int tiempo_total = 0;
+        //int tiempo_total = 0;
         // for (int i=0; i<asignaciones.length; ++i){
         //     int serv = asignaciones[i];
         //     System.out.print(i + " -> " + serv + "   ");
         //     tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         // }
-        System.out.print(/*"Tiempo: "+*/ calcular_tiempo_servidores()[2] + " ");
-        // System.out.println("\n");
+        System.out.println("Tiempo: " + calcular_tiempo_servidores()[2]);
     }
 
     public void imprimir_tiempos() {
@@ -114,6 +113,7 @@ public class Estado {
                 max = tiempo_servidores[serverID];
             suma += tiempo;
         }
+
         for (int i=0; i<nserv; ++i) {
             if (tiempo_servidores[i] < min)
                 min = tiempo_servidores[i];
@@ -122,7 +122,7 @@ public class Estado {
         retVal[0] = max;
         retVal[1] = min;
         retVal[2] = suma;
-        //System.out.println(" max min suma " + max + " " +min+ " " +  suma);
+
         return retVal;
     }
     
@@ -130,39 +130,22 @@ public class Estado {
         return (double) calcular_tiempo_servidores()[0];
     }
 
-    public double getHeuristicValue2() { //max - min
+    public double getHeuristicValue2() { //variancia
         
-        int[] ret = calcular_tiempo_servidores();
-        int max = ret[0];
-        int min = ret[1];
-        int suma = ret[2];
+        double suma = (double)calcular_tiempo_servidores()[2];
+        double m = suma/(double)nserv;
+        double heu = 0;
 
-        int heu = max - min;
-        
-        double total = (double)suma + (double)heu*0;
-
-        return (double) total;
-    }
-
-    public double getHeuristicValue3() { //entropia
-        int[] maxMin = calcular_tiempo_servidores();
-        int max =maxMin[0];
-        int min = maxMin[1];
-        boolean minZero = min==0;
-        double entropia = 0.0;
-        
-        for (int i=0; i<nserv; ++i) {
-            double aux;
-            if (minZero)
-            aux = (double)tiempo_servidores[i]/(double) (0.65);
-            else{
-                aux = (double)tiempo_servidores[i]/(double) (min);
-            }
-            if (aux != 0) entropia = entropia + aux*Math.log(aux);
+        for (int i = 0; i < nserv; i++){
+            double aux = tiempo_servidores[i] - m;
+            heu = heu + aux*aux;
         }
-        // int suma = maxMin[2];
-        // double total = (double)suma*0.5 + (double)entropia*0.5;
-        return entropia;
+
+        heu = heu/nserv;
+        
+        double total = suma + heu*0.01;
+
+        return total;
     }
     
     public boolean moverPeticion(int pet, int serv) {
