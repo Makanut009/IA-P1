@@ -51,7 +51,7 @@ public class Estado {
             asignaciones[i] = it.next();
         }
         imprimir_asignaciones();
-        // imprimir_tiempos();
+        imprimir_tiempos();
     }
 
     public void generaSolInicial2() {
@@ -76,7 +76,7 @@ public class Estado {
             }
         }
         imprimir_asignaciones();
-        // imprimir_tiempos();
+        imprimir_tiempos();
     }
 
     public void imprimir_asignaciones() {
@@ -93,7 +93,7 @@ public class Estado {
         for (int i=0; i<nserv; ++i){
             System.out.print(i + " -> " + tiempo_servidores[i] + "   ");
         }
-        System.out.println("\n");
+        System.out.println();
     }
     
     public int[] calcular_tiempo_servidores(){
