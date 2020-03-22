@@ -19,9 +19,17 @@ public class MyProblem {
             if (ops == 1 || ops == 2) {
                 
                 float lambda = 0;
-
+                int stiter = 0;
+                int steps = 0;
+                int k = 0;
                 if(ops==2){
-                    System.out.println("Has escogido SimmulatedAnnealing, elige el parametro lambda");
+                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro steps: ");
+                    steps = in.nextInt();
+                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro stiter: ");
+                    stiter = in.nextInt();
+                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro K: ");
+                    k = in.nextInt();
+                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro lambda: ");
                     lambda = in.nextFloat();
                 }
                 
@@ -94,8 +102,8 @@ public class MyProblem {
 
                     if(ops==1)
                         MyHillClimbingSearch(estado, heu, succ);
-                    // else
-                    //     MySimulatedAnnealingSearch(estado, heu, succ, lambda);
+                    else
+                        MySimulatedAnnealingSearch(estado, heu, succ, steps, stiter, k, lambda);
 
                     long elapsedTime = System.currentTimeMillis() - tini;
                     System.out.println("Tiempo de ejecución: " + elapsedTime +" ms\n");
@@ -147,42 +155,39 @@ public class MyProblem {
         }
     }
 
-    // private static void MySimulatedAnnealingSearch(Estado estado, int heuristico, int succ, float lambda) {
-    //     try {
+    private static void MySimulatedAnnealingSearch(Estado estado, int heuristico, int succ, int steps, int stiter, int k, float lambda) {
+        try {
 
-    //         Problem problema;
-    //         if (heuristico == 1){
-    //             if(succ==1)
-    //                 problema = new Problem(estado, new MySuccessorFunction1(), new MyGoalTest(), new MyHeuristicFunction1());
-    //             else{
-    //                 problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction1());
+            Problem problema;
+            if (heuristico == 1){
+                if(succ==1)
+                    problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction1());
+                else{
+                    problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction1());
 
-    //             }
-    //         }
-    //         else {
-    //             if(succ==1)
-    //                 problema = new Problem(estado, new MySuccessorFunction1(), new MyGoalTest(), new MyHeuristicFunction2());
-    //             else{
-    //                 problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction2());
+                }
+            }
+            else {
+                if(succ==1)
+                    problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction2());
+                else{
+                    problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction2());
 
-    //             }
-    //         }
+                }
+            }
             
-    //         Search search = new SimulatedAnnealingSearch(10000, 100, 5, lambda);
-    //         SearchAgent agent = new SearchAgent(problema, search);
+            Search search = new SimulatedAnnealingSearch(steps, stiter, k, lambda);
+            SearchAgent agent = new SearchAgent(problema, search);
             
-    //         // System.out.println(agent.getInstrumentation());
-    //         // System.out.println(agent.getActions());
+            System.out.println(agent.getInstrumentation());
+            // System.out.println(agent.getActions());
             
-    //         //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).toString());
-    //         //System.out.println("\n" + ((AzamonEstado) search.getGoalState()).correspondenciasToString());
-            
-    //         Estado estado_final = (Estado) search.getGoalState();
-    //         //estado_final.imprimir_asignaciones();
-    //         estado_final.imprimir_tiempos();
+            Estado estado_final = (Estado) search.getGoalState();
+            estado_final.imprimir_asignaciones();
+            estado_final.imprimir_tiempos();
 
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
