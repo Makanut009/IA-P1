@@ -55,7 +55,7 @@ public class MyProblem {
                 int succ = 3; //in.nextInt();
                 
                 System.out.println("Iteraciones que hacer sobre el problema: 10 \n");
-                int ite = 10; //in.nextInt();
+                int ite = 1; //in.nextInt();
 
                 for(int i = 0; i < ite;++i){
 
@@ -108,7 +108,7 @@ public class MyProblem {
                     long elapsedTime = System.currentTimeMillis() - tini;
                     System.out.println("Tiempo de ejecución: " + elapsedTime +" ms\n");
                     
-                    nusu = nusu +100;
+                    //nusu = nusu +100;
                 }
             }
         }

@@ -1,7 +1,6 @@
 default:
 	javac Estado.java;
 	javac MySuccessorFunction1.java
-	javac MySuccessorFunction2.java
 	javac MySuccessorFunction3.java
 	javac MySuccessorFunctionSA1.java
 	javac MyHeuristicFunction1.java

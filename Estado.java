@@ -63,7 +63,8 @@ public class Estado {
             int fileID = peticiones.getRequest(i)[1];
             Iterator<Integer> it = servidores.fileLocations(fileID).iterator(); 
             boolean found = false;
-            for (int j = 0; j < servidores.fileLocations(fileID).size(); j++){
+            int size = servidores.fileLocations(fileID).size();
+            for (int j = 0; j < size && !found; j++){
                 int serv = it.next();
                 if(servidores_usados[serv] == 0){
                     asignaciones[i] = serv;
@@ -72,7 +73,14 @@ public class Estado {
                 }
             }
             if (!found) {
-                asignaciones[i] = random.nextInt(nserv);
+                it = servidores.fileLocations(fileID).iterator(); 
+                Random rand = new Random();
+                int elem = rand.nextInt(size);
+                int servToMove = 0;
+                for(int k = 0; k < elem; ++k){
+                    servToMove = it.next();
+                }
+                asignaciones[i] = servToMove;
             }
         }
         imprimir_asignaciones();
@@ -128,7 +136,6 @@ public class Estado {
     
     public double getHeuristicValue1() { //max
         int max = calcular_tiempo_servidores()[0];
-        //System.out.println(max);
         return (double) max;
     }
 
@@ -158,21 +165,19 @@ public class Estado {
         }
     }
 
-    public boolean intercambiarPeticiones(int pet1, int pet2) {
+    public boolean se_puede_intercambiar(int pet1, int pet2) {
         if (asignaciones[pet1] == asignaciones[pet2]) return false; //Servidor compartido
-        
         int file1 = peticiones.getRequest(pet1)[1];
         int file2 = peticiones.getRequest(pet2)[1];
-
         Set<Integer> lista1 = servidores.fileLocations(file1);
         Set<Integer> lista2 = servidores.fileLocations(file2);
+        if (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1])) return true;
+        else return false;
+    }
 
-        if (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1])) {
-            int aux = asignaciones[pet1];
-            asignaciones[pet1] = asignaciones[pet2];
-            asignaciones[pet2] = aux;
-            return true;
-        }
-        return false;
+    public void intercambiarPeticiones(int pet1, int pet2) {
+        int aux = asignaciones[pet1];
+        asignaciones[pet1] = asignaciones[pet2];
+        asignaciones[pet2] = aux;
     }
 }
