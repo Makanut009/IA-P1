@@ -29,8 +29,8 @@ public class MySuccessorFunction3 implements SuccessorFunction {
 					if(estado.se_puede_intercambiar(pet, pet2)){  //mover peticion pet a servidor serv
 						String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
 						Estado nuevoEstado = new Estado(estado);
-						nuevoEstado.intercambiarPeticiones(pet, pet2);
-						retVal.add(new Successor(s, nuevoEstado));
+						if (nuevoEstado.intercambiarPeticiones(pet, pet2))
+							retVal.add(new Successor(s, nuevoEstado));
 					}
 				}
 			}

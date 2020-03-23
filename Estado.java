@@ -71,7 +71,6 @@ public class Estado {
     }
 
     public void generaSolInicial2() {
-        //Segona opció de generació inicial de solució
         Random random = new Random();
 
         int[] servidores_usados = new int[nserv];
@@ -86,6 +85,10 @@ public class Estado {
                     asignaciones[i] = serv;
                     servidores_usados[serv]++;
                     found = true;
+                    int userID = peticiones.getRequest(i)[0];
+                    int tiempo = servidores.tranmissionTime(serv, userID);
+                    tiempo_servidores[serv] += tiempo;
+                    suma += tiempo;
                 }
             }
             if (!found) {
@@ -97,8 +100,18 @@ public class Estado {
                     servToMove = it.next();
                 }
                 asignaciones[i] = servToMove;
+                int userID = peticiones.getRequest(i)[0];
+                int tiempo = servidores.tranmissionTime(servToMove, userID);
+                tiempo_servidores[servToMove] += tiempo;
+                suma += tiempo;
             }
         }
+
+        for (int i=0; i<nserv; ++i) {
+            if (tiempo_servidores[i] > max)
+                max = tiempo_servidores[i];
+        }
+        
         imprimir_asignaciones();
         imprimir_tiempos();
     }
@@ -148,7 +161,7 @@ public class Estado {
     // }
     
     public double getHeuristicValue1() { //max
-        System.out.println(max);
+        //System.out.println(max);
         return (double) max;
     }
 
@@ -164,7 +177,7 @@ public class Estado {
 
         heu = heu/nserv;
         double total = suma + heu*0.01;
-        return total;
+        return suma;
     }
     
     public boolean moverPeticion(int pet, int serv) {
@@ -180,10 +193,16 @@ public class Estado {
             suma += temps_nou;
             tiempo_servidores[serv] += temps_nou;
 
+            for (int i=0; i<nserv; ++i) {
+                if (i!=serv && tiempo_servidores[serv] == tiempo_servidores[i]) return false;
+                if (i!=serv_ant && tiempo_servidores[serv_ant] == tiempo_servidores[i]) return false;
+            }
+
             asignaciones[pet] = serv;
 
             if (tiempo_anterior == max) recalcular_max();
             if (temps_nou > max) max = temps_nou;
+
             return true;
         }
     }
@@ -205,12 +224,14 @@ public class Estado {
         return  (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1]));
     }
 
-    public void intercambiarPeticiones(int pet1, int pet2) {
+    public boolean intercambiarPeticiones(int pet1, int pet2) {
 
         int serv1 = asignaciones[pet1];
         int serv2 = asignaciones[pet2];
         asignaciones[pet1] = serv2;
         asignaciones[pet2] = serv1;
+        int tiempo_anterior1 = tiempo_servidores[serv1];
+        int tiempo_anterior2 = tiempo_servidores[serv2];
 
         int userID1 = peticiones.getRequest(pet1)[0];
         int userID2 = peticiones.getRequest(pet2)[0];
@@ -227,10 +248,16 @@ public class Estado {
         tiempo_servidores[serv1] = tiempo_servidores[serv1] - temps1 + temps4;
         tiempo_servidores[serv2] = tiempo_servidores[serv2] - temps2 + temps3;
 
-        if (temps1 == max || temps2 == max) recalcular_max();
-        else {
-            if (temps3 > max) max = temps3;
-            if (temps4 > max) max = temps4;
+        for (int i=0; i<nserv; ++i) {
+            if (i!=serv1 && tiempo_servidores[serv1] == tiempo_servidores[i]) return false;
+            if (i!=serv2 && tiempo_servidores[serv2] == tiempo_servidores[i]) return false;
         }
+
+        if (tiempo_anterior1 == max || tiempo_anterior2 == max) recalcular_max();
+        else {
+            if (tiempo_servidores[serv1] > max) max = tiempo_servidores[serv1];
+            if (tiempo_servidores[serv2] > max) max = tiempo_servidores[serv2];
+        }
+        return true;
     }
 }
