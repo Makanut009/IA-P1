@@ -127,7 +127,9 @@ public class Estado {
     }
     
     public double getHeuristicValue1() { //max
-        return (double) calcular_tiempo_servidores()[0];
+        int max = calcular_tiempo_servidores()[0];
+        //System.out.println(max);
+        return (double) max;
     }
 
     public double getHeuristicValue2() { //variancia

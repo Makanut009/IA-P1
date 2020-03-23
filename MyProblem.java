@@ -23,12 +23,12 @@ public class MyProblem {
                 int steps = 0;
                 int k = 0;
                 if(ops==2){
-                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro steps: ");
-                    steps = in.nextInt();
-                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro stiter: ");
-                    stiter = in.nextInt();
+                    //System.out.print("Has escogido SimmulatedAnnealing, elige el parametro steps: ");
+                    steps = 10000; //in.nextInt();
+                    //System.out.print("Has escogido SimmulatedAnnealing, elige el parametro stiter: ");
+                    stiter = 100; //in.nextInt();
                     System.out.print("Has escogido SimmulatedAnnealing, elige el parametro K: ");
-                    k = in.nextInt();
+                    k = 5;//in.nextInt();
                     System.out.print("Has escogido SimmulatedAnnealing, elige el parametro lambda: ");
                     lambda = in.nextFloat();
                 }
@@ -49,13 +49,13 @@ public class MyProblem {
                 }
                 
                 System.out.println("Introduce tipo de heuristico, 1 o 2 o 3: 1");
-                int heu = 2; //in.nextInt();
+                int heu = 1; //in.nextInt();
                 
                 System.out.println("Introduce tipo de successor, 1, 2 o 3: 3");
                 int succ = 3; //in.nextInt();
                 
-                System.out.println("Iteraciones que hacer sobre el problema: 1 \n");
-                int ite = 1; //in.nextInt();
+                System.out.println("Iteraciones que hacer sobre el problema: 10 \n");
+                int ite = 10; //in.nextInt();
 
                 for(int i = 0; i < ite;++i){
 
@@ -86,8 +86,8 @@ public class MyProblem {
                     System.out.println("Semillas: " + seed1 + " " + seed2);
 
                     Estado estado;
-                    estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
                     
+                    estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
                     // System.out.println("Si deseas usar el generador de soluciones iniciales 1, introduce '1'; si deseas usar el generador 2, introduce cualquier otro número:");
                     // if (in.nextInt() == 1) estado.generaSolInicial2();
                     // else estado.generaSolInicial2();            
@@ -97,16 +97,18 @@ public class MyProblem {
                     // System.out.println("Si deseas usar la función heurística 1, introduce '1'; si deseas usar la función heurística 2, introduce cualquier otro número:");
                     // if (in.nextInt() == 1) heuristico = 1;
                     // else heuristico = 2;
-
+                    
                     long tini = System.currentTimeMillis();
-
+                    
                     if(ops==1)
-                        MyHillClimbingSearch(estado, heu, succ);
+                    MyHillClimbingSearch(estado, heu, succ);
                     else
-                        MySimulatedAnnealingSearch(estado, heu, succ, steps, stiter, k, lambda);
-
+                    MySimulatedAnnealingSearch(estado, heu, succ, steps, stiter, k, lambda);
+                    
                     long elapsedTime = System.currentTimeMillis() - tini;
                     System.out.println("Tiempo de ejecución: " + elapsedTime +" ms\n");
+                    
+                    nusu = nusu +100;
                 }
             }
         }
