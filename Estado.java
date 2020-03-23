@@ -11,6 +11,8 @@ public class Estado {
     static Requests peticiones;
     int[] tiempo_servidores;
     int[] asignaciones;
+    int max;
+    int suma;
 
     public Estado(int nusu, int npet, int nserv, int nrep, int seed1, int seed2) throws Servers.WrongParametersException {
         this.nserv = nserv;
@@ -18,6 +20,9 @@ public class Estado {
         this.npet = peticiones.size();
         servidores = new Servers(nserv, nrep, seed2); //servidores, replicas, seed
         asignaciones = new int[this.npet];
+        tiempo_servidores = new int[nserv];
+        max = 0;
+        suma = 0;
 
         // for (int i = 0; i < npet; ++i) {
         //     int UserID = peticiones.getRequest(i)[0];
@@ -36,6 +41,9 @@ public class Estado {
     
     public Estado(Estado estat){
         asignaciones = estat.asignaciones.clone();
+        tiempo_servidores = estat.tiempo_servidores.clone();
+        max = estat.max;
+        suma = estat.suma;
     }
 
 	//Métodos
@@ -44,11 +52,19 @@ public class Estado {
     }
 
     public void generaSolInicial1() {
-        
         for (int i = 0; i < npet; ++i) {
             int fileID = peticiones.getRequest(i)[1];
             Iterator<Integer> it = servidores.fileLocations(fileID).iterator(); 
-            asignaciones[i] = it.next();
+            int serverID = it.next();
+            asignaciones[i] = serverID;
+            int userID = peticiones.getRequest(i)[0];
+            int tiempo = servidores.tranmissionTime(serverID, userID);
+            tiempo_servidores[serverID] += tiempo;
+            suma += tiempo;
+        }
+        for (int i=0; i<nserv; ++i) {
+            if (tiempo_servidores[i] > max)
+                max = tiempo_servidores[i];
         }
         imprimir_asignaciones();
         imprimir_tiempos();
@@ -94,7 +110,7 @@ public class Estado {
         //     System.out.print(i + " -> " + serv + "   ");
         //     tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         // }
-        System.out.println("Tiempo: " + calcular_tiempo_servidores()[2]);
+        System.out.println("Tiempo: " + suma + " " + max);
     }
 
     public void imprimir_tiempos() {
@@ -104,44 +120,40 @@ public class Estado {
         System.out.println();
     }
     
-    public int[] calcular_tiempo_servidores(){
+    // public int[] calcular_tiempo_servidores(){
 
-        tiempo_servidores = new int[nserv];
-        int max = 0;
-        int min = 999999;
-        int suma = 0;
-        int[] retVal = new int[3];
+    //     int suma = 0;
+    //     int[] retVal = new int[3];
 
-        for (int i=0; i<npet; ++i) {
-            int userID = peticiones.getRequest(i)[0];
-            int serverID = asignaciones[i];
-            int tiempo = servidores.tranmissionTime(serverID, userID);
-            tiempo_servidores[serverID] = tiempo_servidores[serverID] + tiempo;
-            if (tiempo_servidores[serverID] > max)
-                max = tiempo_servidores[serverID];
-            suma += tiempo;
-        }
+    //     for (int i=0; i<npet; ++i) {
+    //         int userID = peticiones.getRequest(i)[0];
+    //         int serverID = asignaciones[i];
+    //         int tiempo = servidores.tranmissionTime(serverID, userID);
+    //         tiempo_servidores[serverID] = tiempo_servidores[serverID] + tiempo;
+    //         if (tiempo_servidores[serverID] > max)
+    //             max = tiempo_servidores[serverID];
+    //         suma += tiempo;
+    //     }
 
-        for (int i=0; i<nserv; ++i) {
-            if (tiempo_servidores[i] < min)
-                min = tiempo_servidores[i];
-        }
+    //     for (int i=0; i<nserv; ++i) {
+    //         if (tiempo_servidores[i] < min)
+    //             min = tiempo_servidores[i];
+    //     }
 
-        retVal[0] = max;
-        retVal[1] = min;
-        retVal[2] = suma;
+    //     retVal[0] = max;
+    //     retVal[1] = min;
+    //     retVal[2] = suma;
 
-        return retVal;
-    }
+    //     return retVal;
+    // }
     
     public double getHeuristicValue1() { //max
-        int max = calcular_tiempo_servidores()[0];
+        System.out.println(max);
         return (double) max;
     }
 
     public double getHeuristicValue2() { //variancia
         
-        double suma = (double)calcular_tiempo_servidores()[2];
         double m = suma/(double)nserv;
         double heu = 0;
 
@@ -151,17 +163,36 @@ public class Estado {
         }
 
         heu = heu/nserv;
-        
         double total = suma + heu*0.01;
-
         return total;
     }
     
     public boolean moverPeticion(int pet, int serv) {
-        if (asignaciones[pet] == serv) return false;
+        int serv_ant = asignaciones[pet];
+        if (serv_ant == serv) return false;
         else {
-            asignaciones[pet]= serv;
+            int tiempo_anterior = tiempo_servidores[serv_ant];
+            int userID = peticiones.getRequest(pet)[0];
+            int temps_anterior = servidores.tranmissionTime(serv_ant, userID);
+            suma -= temps_anterior;
+            tiempo_servidores[serv_ant] -= temps_anterior;
+            int temps_nou = servidores.tranmissionTime(serv, userID);
+            suma += temps_nou;
+            tiempo_servidores[serv] += temps_nou;
+
+            asignaciones[pet] = serv;
+
+            if (tiempo_anterior == max) recalcular_max();
+            if (temps_nou > max) max = temps_nou;
             return true;
+        }
+    }
+
+    public void recalcular_max(){
+        max = 0;
+        for (int i = 0; i < nserv; i++) {
+            if (tiempo_servidores[i] > max)
+                max = tiempo_servidores[i];
         }
     }
 
@@ -171,13 +202,35 @@ public class Estado {
         int file2 = peticiones.getRequest(pet2)[1];
         Set<Integer> lista1 = servidores.fileLocations(file1);
         Set<Integer> lista2 = servidores.fileLocations(file2);
-        if (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1])) return true;
-        else return false;
+        return  (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1]));
     }
 
     public void intercambiarPeticiones(int pet1, int pet2) {
-        int aux = asignaciones[pet1];
-        asignaciones[pet1] = asignaciones[pet2];
-        asignaciones[pet2] = aux;
+
+        int serv1 = asignaciones[pet1];
+        int serv2 = asignaciones[pet2];
+        asignaciones[pet1] = serv2;
+        asignaciones[pet2] = serv1;
+
+        int userID1 = peticiones.getRequest(pet1)[0];
+        int userID2 = peticiones.getRequest(pet2)[0];
+        
+        int temps1 = servidores.tranmissionTime(serv1, userID1);
+        int temps2 = servidores.tranmissionTime(serv2, userID2);
+
+        int temps3 = servidores.tranmissionTime(serv2, userID1);
+        int temps4 = servidores.tranmissionTime(serv1, userID2);
+
+        suma = suma - temps1 - temps2;
+        suma = suma + temps3 + temps4;
+
+        tiempo_servidores[serv1] = tiempo_servidores[serv1] - temps1 + temps4;
+        tiempo_servidores[serv2] = tiempo_servidores[serv2] - temps2 + temps3;
+
+        if (temps1 == max || temps2 == max) recalcular_max();
+        else {
+            if (temps3 > max) max = temps3;
+            if (temps4 > max) max = temps4;
+        }
     }
 }

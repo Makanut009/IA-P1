@@ -42,7 +42,7 @@ public class MyProblem {
                 System.out.println("Introduce el número mínimo de réplicas por fichero: 5");
                 int nrep = 5; //in.nextInt();
                 
-                int sol = 2;
+                int sol = 1;
                 while(sol!= 1 && sol!=2){
                     System.out.println("Introduce el generador de solucion inicial, 1 o 2: 2");
                     sol = in.nextInt();
@@ -52,7 +52,7 @@ public class MyProblem {
                 int heu = 1; //in.nextInt();
                 
                 System.out.println("Introduce tipo de successor, 1, 2 o 3: 3");
-                int succ = 3; //in.nextInt();
+                int succ = 1; //in.nextInt();
                 
                 System.out.println("Iteraciones que hacer sobre el problema: 10 \n");
                 int ite = 1; //in.nextInt();
