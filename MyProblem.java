@@ -52,34 +52,35 @@ public class MyProblem {
                 System.out.println("Introduce el generador de sucesores, 1, 2 o 3:");
                 int succ = in.nextInt();
                 
-                System.out.println("Iteraciones que hacer sobre el problema: 1\n");
-                int ite = 1; //in.nextInt();
+                System.out.println("Iteraciones que hacer sobre el problema: 10\n");
+                int ite = 10; //in.nextInt();
 
-                for(int i = 0; i < ite;++i){
+                for(int i = 0; i < ite; ++i){
 
                     System.out.println("--- Iteración " + i + " ---");
 
                     // System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                    int seed1;//in.nextInt();
+                    //int seed1 = in.nextInt();
                     //if (seed1 < 0) seed1 = random.nextInt();
                     
                     //System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                    int seed2;//in.nextInt();
+                    //int seed2 = in.nextInt();
                     //if (seed2 < 0) seed2 = random.nextInt();
 
-                    seed1 = 1234;
-                    seed2 = 1234;
+                    //int seed1 = 1234;
+                    //int seed2 = 1234;
 
-                    // if (i == 0) { seed1 = 1771455837; seed2 = 2003815554;}
-                    // else if (i == 1) { seed1 = 891091758; seed2 = -202376362;}
-                    // else if (i == 2) { seed1 = -804509587; seed2 = -658628491;}
-                    // else if (i == 3) { seed1 = 1238774172; seed2 = -711265905;}
-                    // else if (i == 4) { seed1 = 7009249; seed2 = 809791697;}
-                    // else if (i == 5) { seed1 = -573801870; seed2 = 571569998;}
-                    // else if (i == 6) { seed1 = 1969224113; seed2 = 1840351992;}
-                    // else if (i == 7) { seed1 = -1869634747; seed2 = -542952602;}
-                    // else if (i == 8) { seed1 = 1131403503; seed2 = -2007456259;}
-                    // else { seed1 = -489086994; seed2 = 354937147;}
+                    int seed1, seed2;
+                    if (i == 0) { seed1 = 1771455837; seed2 = 2003815554;}
+                    else if (i == 1) { seed1 = 891091758; seed2 = -202376362;}
+                    else if (i == 2) { seed1 = -804509587; seed2 = -658628491;}
+                    else if (i == 3) { seed1 = 1238774172; seed2 = -711265905;}
+                    else if (i == 4) { seed1 = 7009249; seed2 = 809791697;}
+                    else if (i == 5) { seed1 = -573801870; seed2 = 571569998;}
+                    else if (i == 6) { seed1 = 1969224113; seed2 = 1840351992;}
+                    else if (i == 7) { seed1 = -1869634747; seed2 = -542952602;}
+                    else if (i == 8) { seed1 = 1131403503; seed2 = -2007456259;}
+                    else { seed1 = -489086994; seed2 = 354937147;}
 
                     System.out.println("Semillas: " + seed1 + " " + seed2);
 
@@ -101,6 +102,7 @@ public class MyProblem {
                     
                     //nusu = nusu +100;
                 }
+                System.out.println("-----------------------------------");
             }
         }
     }
