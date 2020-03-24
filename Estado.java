@@ -112,18 +112,26 @@ public class Estado {
                 max = tiempo_servidores[i];
         }
         
-        imprimir_asignaciones();
+        //imprimir_asignaciones();
         imprimir_tiempos();
     }
 
+    public void calcular_suma() {
+        int tiempo_total = 0;
+        for (int i=0; i<asignaciones.length; ++i){
+            int serv = asignaciones[i];
+            tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
+        }
+        System.out.println("Suma recalculada: " + tiempo_total);
+    }
+
     public void imprimir_asignaciones() {
-        //int tiempo_total = 0;
-        // for (int i=0; i<asignaciones.length; ++i){
-        //     int serv = asignaciones[i];
-        //     System.out.print(i + " -> " + serv + "   ");
-        //     tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
-        // }
-        System.out.println("Tiempo: " + suma + " " + max);
+        int tiempo_total = 0;
+        for (int i=0; i<asignaciones.length; ++i){
+            int serv = asignaciones[i];
+            System.out.print(i + " -> " + serv + "   ");
+            tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
+        }
     }
 
     public void imprimir_tiempos() {
@@ -131,6 +139,7 @@ public class Estado {
             System.out.print(i + " -> " + tiempo_servidores[i] + "   ");
         }
         System.out.println();
+        System.out.println("Tiempo: " + suma + " " + max);
     }
     
     // public int[] calcular_tiempo_servidores(){
@@ -161,8 +170,7 @@ public class Estado {
     // }
     
     public double getHeuristicValue1() { //max
-        //System.out.println(max);
-        return (double) max;
+        return (double) (max);
     }
 
     public double getHeuristicValue2() { //variancia
@@ -177,7 +185,7 @@ public class Estado {
 
         heu = heu/nserv;
         double total = suma + heu*0.01;
-        return suma;
+        return total;
     }
     
     public boolean moverPeticion(int pet, int serv) {
@@ -193,15 +201,26 @@ public class Estado {
             suma += temps_nou;
             tiempo_servidores[serv] += temps_nou;
 
+            recalcular_max();
+
+            // for (int i=0; i<nserv; ++i) {
+            //     if (i!=serv && tiempo_servidores[serv] == tiempo_servidores[i] && tiempo_servidores[serv] == max) return false;
+            //     if (i!=serv_ant && tiempo_servidores[serv_ant] == tiempo_servidores[i] && tiempo_servidores[serv_ant] == max) return false;
+            // }
+            int count = 0;
             for (int i=0; i<nserv; ++i) {
-                if (i!=serv && tiempo_servidores[serv] == tiempo_servidores[i]) return false;
-                if (i!=serv_ant && tiempo_servidores[serv_ant] == tiempo_servidores[i]) return false;
-            }
+                //for (int j=0; j<nserv; ++j) {
+                    //if (i!=j && tiempo_servidores[i] == tiempo_servidores[j] && tiempo_servidores[i] == max) return false;
+                    if (tiempo_servidores[i] == max) ++count;
+                //}
+            }  
+            System.out.println(count);
+            if (count > 1) return false;
 
             asignaciones[pet] = serv;
 
-            if (tiempo_anterior == max) recalcular_max();
-            if (temps_nou > max) max = temps_nou;
+            // if (tiempo_anterior == max) recalcular_max();
+            // if (temps_nou > max) max = temps_nou;
 
             return true;
         }
@@ -209,7 +228,7 @@ public class Estado {
 
     public void recalcular_max(){
         max = 0;
-        for (int i = 0; i < nserv; i++) {
+        for (int i = 0; i < nserv; ++i) {
             if (tiempo_servidores[i] > max)
                 max = tiempo_servidores[i];
         }
@@ -221,7 +240,11 @@ public class Estado {
         int file2 = peticiones.getRequest(pet2)[1];
         Set<Integer> lista1 = servidores.fileLocations(file1);
         Set<Integer> lista2 = servidores.fileLocations(file2);
-        return  (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1]));
+        if (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1])) {
+            System.out.println("INter");
+            return true;
+        }
+        else return false;
     }
 
     public boolean intercambiarPeticiones(int pet1, int pet2) {
@@ -248,16 +271,26 @@ public class Estado {
         tiempo_servidores[serv1] = tiempo_servidores[serv1] - temps1 + temps4;
         tiempo_servidores[serv2] = tiempo_servidores[serv2] - temps2 + temps3;
 
-        for (int i=0; i<nserv; ++i) {
-            if (i!=serv1 && tiempo_servidores[serv1] == tiempo_servidores[i]) return false;
-            if (i!=serv2 && tiempo_servidores[serv2] == tiempo_servidores[i]) return false;
-        }
+        recalcular_max();
+        int count = 0;
 
-        if (tiempo_anterior1 == max || tiempo_anterior2 == max) recalcular_max();
-        else {
-            if (tiempo_servidores[serv1] > max) max = tiempo_servidores[serv1];
-            if (tiempo_servidores[serv2] > max) max = tiempo_servidores[serv2];
-        }
+        for (int i=0; i<nserv; ++i) {
+            //for (int j=0; j<nserv; ++j) {
+                if (tiempo_servidores[i] == max) ++count;
+              //  if (i!=j && tiempo_servidores[i] == tiempo_servidores[j] && tiempo_servidores[i] == max) return false;
+            //}
+        }     
+        System.out.println(count);
+        if (count > 1) return false;  
+
+        // if (i!=serv1 && tiempo_servidores[serv1] == tiempo_servidores[i] && tiempo_servidores[serv1] == max) return false;
+        // if (i!=serv2 && tiempo_servidores[serv2] == tiempo_servidores[i] && tiempo_servidores[serv2] == max) return false;
+
+        // if (tiempo_anterior1 == max || tiempo_anterior2 == max) recalcular_max();
+        // else {
+        //     if (tiempo_servidores[serv1] > max) max = tiempo_servidores[serv1];
+        //     if (tiempo_servidores[serv2] > max) max = tiempo_servidores[serv2];
+        // }
         return true;
     }
 }

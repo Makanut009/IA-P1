@@ -49,7 +49,7 @@ public class MyProblem {
                 }
                 
                 System.out.println("Introduce tipo de heuristico, 1 o 2 o 3: 1");
-                int heu = 2; //in.nextInt();
+                int heu = 1; //in.nextInt();
                 
                 System.out.println("Introduce tipo de successor, 1, 2 o 3: 3");
                 int succ = 3; //in.nextInt();
@@ -149,8 +149,9 @@ public class MyProblem {
             //agent.getActions();
             
             Estado estado_final = (Estado) search.getGoalState();            
-            estado_final.imprimir_asignaciones();
+            //estado_final.imprimir_asignaciones();
             estado_final.imprimir_tiempos();
+            estado_final.calcular_suma();
 
         } catch (Exception e) {
             e.printStackTrace();
