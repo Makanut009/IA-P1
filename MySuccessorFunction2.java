@@ -11,14 +11,13 @@ public class MySuccessorFunction2 implements SuccessorFunction {
 		Estado estado = (Estado) aState;
 		
 		for(int pet = 0; pet < estado.npet; ++pet) {
-
 			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
 				if (pet!=pet2){
-                Estado nuevoEstado = new Estado(estado);
-
-					if(nuevoEstado.intercambiarPeticiones(pet, pet2)){  //mover peticion pet a servidor serv
+					if(estado.se_puede_intercambiar(pet, pet2)){  //mover peticion pet a servidor serv
 						String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
-						retVal.add(new Successor(s, nuevoEstado));
+						Estado nuevoEstado = new Estado(estado);
+						if (nuevoEstado.intercambiarPeticiones(pet, pet2))
+							retVal.add(new Successor(s, nuevoEstado));
 					}
 				}
 			}

@@ -43,17 +43,17 @@ public class MyProblem {
                 System.out.println("Introduce el número mínimo de réplicas por fichero: 5");
                 int nrep = 5; //in.nextInt();
                 
-                System.out.println("Introduce el generador de solucion inicial, 1 o 2:");
+                System.out.println("Introduce el generador de solucion inicial, 1 o 2: ");
                 int sol = in.nextInt();
                 
-                System.out.println("Introduce el heuristico, 1 o 2 o 3:");
+                System.out.println("Introduce el heuristico, 1 o 2 o 3: ");
                 int heu = in.nextInt();
                 
-                System.out.println("Introduce el generador de sucesores, 1, 2 o 3:");
+                System.out.println("Introduce el generador de sucesores, 1, 2 o 3: ");
                 int succ = in.nextInt();
                 
-                System.out.println("Iteraciones que hacer sobre el problema: 10\n");
-                int ite = 10; //in.nextInt();
+                System.out.println("Iteraciones que hacer sobre el problema: \n");
+                int ite = in.nextInt();
 
                 for(int i = 0; i < ite; ++i){
 
@@ -99,8 +99,6 @@ public class MyProblem {
                     
                     long elapsedTime = System.currentTimeMillis() - tini;
                     System.out.println("Tiempo de ejecución: " + elapsedTime + " ms\n");
-                    
-                    //nusu = nusu +100;
                 }
                 System.out.println("-----------------------------------");
             }
