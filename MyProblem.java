@@ -12,26 +12,27 @@ public class MyProblem {
     public static void main(String[] args) throws Servers.WrongParametersException {
         Scanner in = new Scanner(System.in);
         Random random = new Random();
-        int ops = 0;
-        while (ops != 3) {
+        int alg = 0;
+        while (alg != 3) {
             mostrar_opciones();
-            ops = in.nextInt();
-            if (ops == 1 || ops == 2) {
+            alg = in.nextInt();
+            if (alg == 1 || alg == 2) {
                 
                 float lambda = 0;
                 int stiter = 0;
                 int steps = 0;
                 int k = 0;
-                if(ops==2){
-                    //System.out.print("Has escogido SimmulatedAnnealing, elige el parametro steps: ");
-                    steps = 10000; //in.nextInt();
-                    //System.out.print("Has escogido SimmulatedAnnealing, elige el parametro stiter: ");
-                    stiter = 100; //in.nextInt();
-                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro K: ");
-                    k = 5;//in.nextInt();
-                    System.out.print("Has escogido SimmulatedAnnealing, elige el parametro lambda: ");
-                    lambda = in.nextFloat();
-                }
+
+                // if(alg==2){
+                //     System.out.print("Has escogido SA, elige el parametro steps: ");
+                //     steps = 10000; //in.nextInt();
+                //     System.out.print("Has escogido SA, elige el parametro stiter: ");
+                //     stiter = 100; //in.nextInt();
+                //     System.out.print("Has escogido SA, elige el parametro K: ");
+                //     k = 5; //in.nextInt();
+                //     System.out.print("Has escogido SA, elige el parametro lambda: ");
+                //     lambda = in.nextFloat();
+                // }
                 
                 System.out.println("Introduce el número de usuarios: 200");
                 int nusu = 200; //in.nextInt();
@@ -42,19 +43,16 @@ public class MyProblem {
                 System.out.println("Introduce el número mínimo de réplicas por fichero: 5");
                 int nrep = 5; //in.nextInt();
                 
-                int sol = 2;
-                while(sol!= 1 && sol!=2){
-                    System.out.println("Introduce el generador de solucion inicial, 1 o 2: 2");
-                    sol = in.nextInt();
-                }
+                System.out.println("Introduce el generador de solucion inicial, 1 o 2:");
+                int sol = in.nextInt();
                 
-                System.out.println("Introduce tipo de heuristico, 1 o 2 o 3: 1");
-                int heu = 1; //in.nextInt();
+                System.out.println("Introduce el heuristico, 1 o 2 o 3:");
+                int heu = in.nextInt();
                 
-                System.out.println("Introduce tipo de successor, 1, 2 o 3: 3");
-                int succ = 3; //in.nextInt();
+                System.out.println("Introduce el generador de sucesores, 1, 2 o 3:");
+                int succ = in.nextInt();
                 
-                System.out.println("Iteraciones que hacer sobre el problema: 10 \n");
+                System.out.println("Iteraciones que hacer sobre el problema: 1\n");
                 int ite = 1; //in.nextInt();
 
                 for(int i = 0; i < ite;++i){
@@ -86,27 +84,20 @@ public class MyProblem {
                     System.out.println("Semillas: " + seed1 + " " + seed2);
 
                     Estado estado;
-                    
                     estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
-                    // System.out.println("Si deseas usar el generador de soluciones iniciales 1, introduce '1'; si deseas usar el generador 2, introduce cualquier otro número:");
-                    // if (in.nextInt() == 1) estado.generaSolInicial2();
-                    // else estado.generaSolInicial2();            
+                                
                     if(sol==1) estado.generaSolInicial1();
                     else estado.generaSolInicial2();
-                    // int heuristico = 0;
-                    // System.out.println("Si deseas usar la función heurística 1, introduce '1'; si deseas usar la función heurística 2, introduce cualquier otro número:");
-                    // if (in.nextInt() == 1) heuristico = 1;
-                    // else heuristico = 2;
                     
                     long tini = System.currentTimeMillis();
                     
-                    if(ops==1)
-                    MyHillClimbingSearch(estado, heu, succ);
+                    if(alg==1)
+                        MyHillClimbingSearch(estado, heu, succ);
                     else
-                    MySimulatedAnnealingSearch(estado, heu, succ, steps, stiter, k, lambda);
+                        MySimulatedAnnealingSearch(estado, heu, succ, steps, stiter, k, lambda);
                     
                     long elapsedTime = System.currentTimeMillis() - tini;
-                    System.out.println("Tiempo de ejecución: " + elapsedTime +" ms\n");
+                    System.out.println("Tiempo de ejecución: " + elapsedTime + " ms\n");
                     
                     //nusu = nusu +100;
                 }
@@ -144,14 +135,12 @@ public class MyProblem {
             Search search = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problema, search);
 
-            System.out.println(agent.getInstrumentation());
+            //System.out.println(agent.getInstrumentation());
             //System.out.println(agent.getActions());
-            //agent.getActions();
             
-            Estado estado_final = (Estado) search.getGoalState();            
+            Estado estado_final = (Estado) search.getGoalState();
             //estado_final.imprimir_asignaciones();
-            estado_final.imprimir_tiempos();
-            estado_final.calcular_suma();
+            estado_final.imprimir_tiempo(false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,12 +171,12 @@ public class MyProblem {
             Search search = new SimulatedAnnealingSearch(steps, stiter, k, lambda);
             SearchAgent agent = new SearchAgent(problema, search);
             
-            System.out.println(agent.getInstrumentation());
+            //System.out.println(agent.getInstrumentation());
             // System.out.println(agent.getActions());
             
             Estado estado_final = (Estado) search.getGoalState();
-            estado_final.imprimir_asignaciones();
-            estado_final.imprimir_tiempos();
+            //estado_final.imprimir_asignaciones();
+            estado_final.imprimir_tiempo(false);
 
         } catch (Exception e) {
             e.printStackTrace();

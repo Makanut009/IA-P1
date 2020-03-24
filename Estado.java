@@ -66,111 +66,70 @@ public class Estado {
             if (tiempo_servidores[i] > max)
                 max = tiempo_servidores[i];
         }
-        imprimir_asignaciones();
-        imprimir_tiempos();
+        //imprimir_asignaciones();
+        imprimir_tiempo(true);
     }
 
     public void generaSolInicial2() {
         Random random = new Random();
-
         int[] servidores_usados = new int[nserv];
         for (int i = 0; i < npet; i++){
             int fileID = peticiones.getRequest(i)[1];
             Iterator<Integer> it = servidores.fileLocations(fileID).iterator(); 
             boolean found = false;
             int size = servidores.fileLocations(fileID).size();
+            int serv = 0;
             for (int j = 0; j < size && !found; j++){
-                int serv = it.next();
+                serv = it.next();
                 if(servidores_usados[serv] == 0){
-                    asignaciones[i] = serv;
-                    servidores_usados[serv]++;
+                    ++servidores_usados[serv];
                     found = true;
-                    int userID = peticiones.getRequest(i)[0];
-                    int tiempo = servidores.tranmissionTime(serv, userID);
-                    tiempo_servidores[serv] += tiempo;
-                    suma += tiempo;
                 }
             }
             if (!found) {
                 it = servidores.fileLocations(fileID).iterator(); 
                 Random rand = new Random();
                 int elem = rand.nextInt(size);
-                int servToMove = 0;
+                serv = it.next();
                 for(int k = 0; k < elem; ++k){
-                    servToMove = it.next();
+                    serv = it.next();
                 }
-                asignaciones[i] = servToMove;
-                int userID = peticiones.getRequest(i)[0];
-                int tiempo = servidores.tranmissionTime(servToMove, userID);
-                tiempo_servidores[servToMove] += tiempo;
-                suma += tiempo;
             }
+            asignaciones[i] = serv;
+            int userID = peticiones.getRequest(i)[0];
+            int tiempo = servidores.tranmissionTime(serv, userID);
+            tiempo_servidores[serv] += tiempo;
+            suma += tiempo;
         }
 
-        for (int i=0; i<nserv; ++i) {
-            if (tiempo_servidores[i] > max)
-                max = tiempo_servidores[i];
-        }
+        recalcular_max();        
         
         //imprimir_asignaciones();
-        imprimir_tiempos();
-    }
-
-    public void calcular_suma() {
-        int tiempo_total = 0;
-        for (int i=0; i<asignaciones.length; ++i){
-            int serv = asignaciones[i];
-            tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
-        }
-        System.out.println("Suma recalculada: " + tiempo_total);
+        imprimir_tiempo(true);
     }
 
     public void imprimir_asignaciones() {
         int tiempo_total = 0;
+        System.out.println("Peticiones:");
         for (int i=0; i<asignaciones.length; ++i){
             int serv = asignaciones[i];
-            System.out.print(i + " -> " + serv + "   ");
+            System.out.println(i + " -> " + serv);
             tiempo_total += servidores.tranmissionTime(serv,peticiones.getRequest(i)[0]);
         }
-    }
-
-    public void imprimir_tiempos() {
+        System.out.println("\nServidores:");
         for (int i=0; i<nserv; ++i){
-            System.out.print(i + " -> " + tiempo_servidores[i] + "   ");
+            System.out.println(i + " -> " + tiempo_servidores[i]);
         }
-        System.out.println();
-        System.out.println("Tiempo: " + suma + " " + max);
+    }
+
+    public void imprimir_tiempo(boolean ini) {
+        if (ini) System.out.println("Tiempo inicial: " + suma);
+        else System.out.println("Tiempo final: " + suma);
     }
     
-    // public int[] calcular_tiempo_servidores(){
-
-    //     int suma = 0;
-    //     int[] retVal = new int[3];
-
-    //     for (int i=0; i<npet; ++i) {
-    //         int userID = peticiones.getRequest(i)[0];
-    //         int serverID = asignaciones[i];
-    //         int tiempo = servidores.tranmissionTime(serverID, userID);
-    //         tiempo_servidores[serverID] = tiempo_servidores[serverID] + tiempo;
-    //         if (tiempo_servidores[serverID] > max)
-    //             max = tiempo_servidores[serverID];
-    //         suma += tiempo;
-    //     }
-
-    //     for (int i=0; i<nserv; ++i) {
-    //         if (tiempo_servidores[i] < min)
-    //             min = tiempo_servidores[i];
-    //     }
-
-    //     retVal[0] = max;
-    //     retVal[1] = min;
-    //     retVal[2] = suma;
-
-    //     return retVal;
-    // }
-    
-    public double getHeuristicValue1() { //max
-        return (double) (max);
+    public double getHeuristicValue1() {
+        double total = max + suma*0.00000000000001;
+        return total;
     }
 
     public double getHeuristicValue2() { //variancia
@@ -200,27 +159,27 @@ public class Estado {
             int temps_nou = servidores.tranmissionTime(serv, userID);
             suma += temps_nou;
             tiempo_servidores[serv] += temps_nou;
+            asignaciones[pet] = serv;
 
             recalcular_max();
 
-            // for (int i=0; i<nserv; ++i) {
-            //     if (i!=serv && tiempo_servidores[serv] == tiempo_servidores[i] && tiempo_servidores[serv] == max) return false;
-            //     if (i!=serv_ant && tiempo_servidores[serv_ant] == tiempo_servidores[i] && tiempo_servidores[serv_ant] == max) return false;
-            // }
+            /*
+            for (int i=0; i<nserv; ++i) {
+                if (i!=serv && tiempo_servidores[serv] == tiempo_servidores[i] && tiempo_servidores[serv] == max) return false;
+                if (i!=serv_ant && tiempo_servidores[serv_ant] == tiempo_servidores[i] && tiempo_servidores[serv_ant] == max) return false;
+            }
+
             int count = 0;
             for (int i=0; i<nserv; ++i) {
-                //for (int j=0; j<nserv; ++j) {
-                    //if (i!=j && tiempo_servidores[i] == tiempo_servidores[j] && tiempo_servidores[i] == max) return false;
+                for (int j=0; j<nserv; ++j) {
                     if (tiempo_servidores[i] == max) ++count;
-                //}
-            }  
-            System.out.println(count);
+                }
+            } 
             if (count > 1) return false;
 
-            asignaciones[pet] = serv;
-
-            // if (tiempo_anterior == max) recalcular_max();
-            // if (temps_nou > max) max = temps_nou;
+            if (tiempo_anterior == max) recalcular_max();
+            if (temps_nou > max) max = temps_nou;
+            */
 
             return true;
         }
@@ -241,7 +200,6 @@ public class Estado {
         Set<Integer> lista1 = servidores.fileLocations(file1);
         Set<Integer> lista2 = servidores.fileLocations(file2);
         if (lista1.contains(asignaciones[pet2]) && lista2.contains(asignaciones[pet1])) {
-            System.out.println("INter");
             return true;
         }
         else return false;
@@ -272,25 +230,26 @@ public class Estado {
         tiempo_servidores[serv2] = tiempo_servidores[serv2] - temps2 + temps3;
 
         recalcular_max();
+        
+        /*
         int count = 0;
-
         for (int i=0; i<nserv; ++i) {
-            //for (int j=0; j<nserv; ++j) {
+            for (int j=0; j<nserv; ++j) {
                 if (tiempo_servidores[i] == max) ++count;
-              //  if (i!=j && tiempo_servidores[i] == tiempo_servidores[j] && tiempo_servidores[i] == max) return false;
-            //}
-        }     
-        System.out.println(count);
+            }
+        }
         if (count > 1) return false;  
 
-        // if (i!=serv1 && tiempo_servidores[serv1] == tiempo_servidores[i] && tiempo_servidores[serv1] == max) return false;
-        // if (i!=serv2 && tiempo_servidores[serv2] == tiempo_servidores[i] && tiempo_servidores[serv2] == max) return false;
+        if (i!=serv1 && tiempo_servidores[serv1] == tiempo_servidores[i] && tiempo_servidores[serv1] == max) return false;
+        if (i!=serv2 && tiempo_servidores[serv2] == tiempo_servidores[i] && tiempo_servidores[serv2] == max) return false;
 
-        // if (tiempo_anterior1 == max || tiempo_anterior2 == max) recalcular_max();
-        // else {
-        //     if (tiempo_servidores[serv1] > max) max = tiempo_servidores[serv1];
-        //     if (tiempo_servidores[serv2] > max) max = tiempo_servidores[serv2];
-        // }
+        if (tiempo_anterior1 == max || tiempo_anterior2 == max) recalcular_max();
+        else {
+            if (tiempo_servidores[serv1] > max) max = tiempo_servidores[serv1];
+            if (tiempo_servidores[serv2] > max) max = tiempo_servidores[serv2];
+        }
+        */
+
         return true;
     }
 }
