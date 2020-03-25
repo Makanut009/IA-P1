@@ -37,7 +37,9 @@ public class MySuccessorFunctionSA1 implements SuccessorFunction {
         } while(!nuevoEstado.moverPeticion(pet, servToMove));
         
         String s = "Peticion " + pet + " asignada al servidor " + servToMove;
-		retVal.add(new Successor(s, nuevoEstado));
+        retVal.add(new Successor(s, nuevoEstado));
+        
+        // System.out.println(nuevoEstado.suma);
         
         return retVal;
 	}
