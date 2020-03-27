@@ -14,7 +14,11 @@ public class MyProblem {
         Random random = new Random();
         int alg = 0;
         while (alg != 3) {
-            mostrar_opciones();
+
+            System.out.println("Hill Climbing: 1");
+            System.out.println("Simulated Annealing: 2");
+            System.out.println("Salir: 3");
+
             alg = in.nextInt();
             if (alg == 1 || alg == 2) {
                 
@@ -23,53 +27,50 @@ public class MyProblem {
                 int steps = 0;
                 int k = 0;
                 if(alg==2){
-                    //System.out.println("Has escogido SA, elige el parametro steps: ");
-                    steps = 10000; //in.nextInt();
-                    //System.out.println("Has escogido SA, elige el parametro stiter: ");
-                    stiter = 100; //in.nextInt();
+                    System.out.println("Has escogido SA, elige el parametro steps: ");
+                    steps = in.nextInt();
+                    System.out.println("Has escogido SA, elige el parametro stiter: ");
+                    stiter = in.nextInt();
                     System.out.println("Has escogido SA, elige el parametro k: ");
                     k = in.nextInt();
                     System.out.println("Has escogido SA, elige el parametro lambda: ");
                     lambda = in.nextFloat();
                 }
                 
-                System.out.println("Introduce el número de usuarios: 200");
-                int nusu = 200; //in.nextInt();
-                System.out.println("Introduce el número máximo de peticiones por usuario: 5");
-                int npet = 5; //in.nextInt();
-                System.out.println("Introduce el número de servidores: 50");
-                int nserv = 50; //in.nextInt();
-                System.out.println("Introduce el número mínimo de réplicas por fichero: 5");
-                int nrep = 5; //in.nextInt();
+                System.out.println("Introduce el número de usuarios: ");
+                int nusu = in.nextInt();
+                System.out.println("Introduce el número máximo de peticiones por usuario: ");
+                int npet = in.nextInt();
+                System.out.println("Introduce el número de servidores: ");
+                int nserv = in.nextInt();
+                System.out.println("Introduce el número mínimo de réplicas por fichero: ");
+                int nrep = in.nextInt();
                 
                 System.out.println("Introduce el generador de solucion inicial, 1 o 2: ");
-                int sol = 2; //in.nextInt();
+                int sol = in.nextInt();
                 
-                System.out.println("Introduce el heuristico, 1 o 2 o 3: ");
-                int heu = 1; //in.nextInt();
+                System.out.println("Introduce el heuristico, 1 o 2: ");
+                int heu = in.nextInt();
                 
                 System.out.println("Introduce el generador de sucesores, 1, 2 o 3: ");
-                int succ = 3; //in.nextInt();
+                int succ = in.nextInt();
                 
-                System.out.println("Iteraciones que hacer sobre el problema: \n");
-                int ite = 1; //in.nextInt();
+                System.out.println("Iteraciones que hacer sobre el problema: ");
+                int ite = in.nextInt();
 
                 for(int i = 0; i < ite; ++i){
 
+                    System.out.println("Introduce una seed para las peticiones o '-1' si deseas usar una seed random: ");
+                    int seed1 = in.nextInt();
+                    if (seed1 < 0) seed1 = random.nextInt();
+                    
+                    System.out.println("Introduce una seed para los servidores o '-1' si deseas usar una seed random: ");
+                    int seed2 = in.nextInt();
+                    if (seed2 < 0) seed2 = random.nextInt();
+
                     System.out.println("--- Iteración " + i + " ---");
 
-                    // System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                    //int seed1 = in.nextInt();
-                    //if (seed1 < 0) seed1 = random.nextInt();
-                    
-                    //System.out.println("Introduce una seed o '-1' si deseas usar una seed random:");
-                    //int seed2 = in.nextInt();
-                    //if (seed2 < 0) seed2 = random.nextInt();
-
-                    int seed1 = 1234;
-                    int seed2 = 1234;
-
-                    //int seed1, seed2;
+                    // int seed1, seed2;
                     // if (i == 0) { seed1 = 1771455837; seed2 = 2003815554;}
                     // else if (i == 1) { seed1 = 891091758; seed2 = -202376362;}
                     // else if (i == 2) { seed1 = -804509587; seed2 = -658628491;}
@@ -80,8 +81,7 @@ public class MyProblem {
                     // else if (i == 7) { seed1 = -1869634747; seed2 = -542952602;}
                     // else if (i == 8) { seed1 = 1131403503; seed2 = -2007456259;}
                     // else { seed1 = -489086994; seed2 = 354937147;}
-
-                    System.out.println("Semillas: " + seed1 + " " + seed2);
+                    //System.out.println("Semillas: " + seed1 + " " + seed2);
 
                     Estado estado;
                     estado = new Estado(nusu, npet, nserv, nrep, seed1, seed2);
@@ -97,17 +97,12 @@ public class MyProblem {
                         MySimulatedAnnealingSearch(estado, heu, succ, steps, stiter, k, lambda);
                     
                     long elapsedTime = System.currentTimeMillis() - tini;
+
                     System.out.println("Tiempo de ejecución: " + elapsedTime + " ms\n");
                 }
                 System.out.println("-----------------------------------");
             }
         }
-    }
-
-    public static void mostrar_opciones() {
-        System.out.println("Hill Climbing: 1");
-        System.out.println("Simulated Annealing: 2");
-        System.out.println("Salir: 3");
     }
 
     private static void MyHillClimbingSearch(Estado estado, int heuristico,int succ) {
@@ -153,24 +148,24 @@ public class MyProblem {
             if (heuristico == 1){
                 if(succ==1)
                     problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction1());
-                else{
-                    problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction1());
-
-                }
+                else if(succ==2)
+                    problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction1());
+                else 
+                    problema = new Problem(estado, new MySuccessorFunction3(), new MyGoalTest(), new MyHeuristicFunction1());
             }
             else {
                 if(succ==1)
                     problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction2());
-                else{
-                    problema = new Problem(estado, new MySuccessorFunctionSA1(), new MyGoalTest(), new MyHeuristicFunction2());
-
-                }
+                else if(succ==2)
+                    problema = new Problem(estado, new MySuccessorFunction2(), new MyGoalTest(), new MyHeuristicFunction2());
+                else 
+                    problema = new Problem(estado, new MySuccessorFunction3(), new MyGoalTest(), new MyHeuristicFunction2());
             }
             
             Search search = new SimulatedAnnealingSearch(steps, stiter, k, lambda);
             SearchAgent agent = new SearchAgent(problema, search);
             
-            System.out.println(agent.getInstrumentation());
+            //System.out.println(agent.getInstrumentation());
             //System.out.println(agent.getActions());
             
             Estado estado_final = (Estado) search.getGoalState();

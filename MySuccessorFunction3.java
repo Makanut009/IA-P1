@@ -18,7 +18,7 @@ public class MySuccessorFunction3 implements SuccessorFunction {
 			for(int j = 0; j < size; ++j) {
                 Estado nuevoEstado = new Estado(estado);
                 int serv = it.next();
-				if(nuevoEstado.moverPeticion(pet, serv)){  //mover peticion pet a servidor serv
+				if(nuevoEstado.moverPeticion(pet, serv)){
 					String s = "Peticion " + pet + " asignada al servidor " + serv;
 					retVal.add(new Successor(s, nuevoEstado));
 				}
@@ -26,7 +26,7 @@ public class MySuccessorFunction3 implements SuccessorFunction {
 
 			for(int pet2 = 0; pet2 < estado.npet; ++pet2) {
 				if (pet!=pet2){
-					if(estado.se_puede_intercambiar(pet, pet2)){  //mover peticion pet a servidor serv
+					if(estado.se_puede_intercambiar(pet, pet2)){
 						String s = "Peticion " + pet + " intercambiada con peticion " + pet2;
 						Estado nuevoEstado = new Estado(estado);
 						if (nuevoEstado.intercambiarPeticiones(pet, pet2))

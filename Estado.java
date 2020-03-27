@@ -6,13 +6,13 @@ public class Estado {
 
     //Atributos    
     static int npet;
-    static int nserv;
+    private static int nserv;
     static Servers servidores;
     static Requests peticiones;
-    int[] tiempo_servidores;
+    private int[] tiempo_servidores;
     int[] asignaciones;
-    int max;
-    int suma;
+    private int max;
+    private int suma;
 
     public Estado(int nusu, int npet, int nserv, int nrep, int seed1, int seed2) throws Servers.WrongParametersException {
         this.nserv = nserv;
@@ -23,20 +23,6 @@ public class Estado {
         tiempo_servidores = new int[nserv];
         max = 0;
         suma = 0;
-
-        // for (int i = 0; i < npet; ++i) {
-        //     int UserID = peticiones.getRequest(i)[0];
-        //     int FileID = peticiones.getRequest(i)[1];
-        //     Iterator<Integer> it = servidores.fileLocations(FileID).iterator();
-
-        //     System.out.println("La peticion " + i + " tiene como usuario "+ UserID +" y fichero " + FileID); 
-        //     System.out.println("El fichero mencionado se encuentra en los servidores:");
-        //     while(it.hasNext()){
-        //         int serv = it.next();
-        //         System.out.println("  " + serv + " que tardaria "+ servidores.tranmissionTime(serv, UserID) + "ms");
-        //     }
-        //     System.out.println();
-        // }
     }
     
     public Estado(Estado estat){
@@ -132,7 +118,7 @@ public class Estado {
         return total;
     }
 
-    public double getHeuristicValue2() { //variancia
+    public double getHeuristicValue2() {
         
         double m = suma/(double)nserv;
         double heu = 0;
@@ -163,24 +149,6 @@ public class Estado {
 
             recalcular_max();
 
-            /*
-            for (int i=0; i<nserv; ++i) {
-                if (i!=serv && tiempo_servidores[serv] == tiempo_servidores[i] && tiempo_servidores[serv] == max) return false;
-                if (i!=serv_ant && tiempo_servidores[serv_ant] == tiempo_servidores[i] && tiempo_servidores[serv_ant] == max) return false;
-            }
-
-            int count = 0;
-            for (int i=0; i<nserv; ++i) {
-                for (int j=0; j<nserv; ++j) {
-                    if (tiempo_servidores[i] == max) ++count;
-                }
-            } 
-            if (count > 1) return false;
-
-            if (tiempo_anterior == max) recalcular_max();
-            if (temps_nou > max) max = temps_nou;
-            */
-
             return true;
         }
     }
@@ -194,7 +162,7 @@ public class Estado {
     }
 
     public boolean se_puede_intercambiar(int pet1, int pet2) {
-        if (asignaciones[pet1] == asignaciones[pet2]) return false; //Servidor compartido
+        if (asignaciones[pet1] == asignaciones[pet2]) return false; //Mismo servidor
         int file1 = peticiones.getRequest(pet1)[1];
         int file2 = peticiones.getRequest(pet2)[1];
         Set<Integer> lista1 = servidores.fileLocations(file1);
@@ -230,25 +198,6 @@ public class Estado {
         tiempo_servidores[serv2] = tiempo_servidores[serv2] - temps2 + temps3;
 
         recalcular_max();
-        
-        /*
-        int count = 0;
-        for (int i=0; i<nserv; ++i) {
-            for (int j=0; j<nserv; ++j) {
-                if (tiempo_servidores[i] == max) ++count;
-            }
-        }
-        if (count > 1) return false;  
-
-        if (i!=serv1 && tiempo_servidores[serv1] == tiempo_servidores[i] && tiempo_servidores[serv1] == max) return false;
-        if (i!=serv2 && tiempo_servidores[serv2] == tiempo_servidores[i] && tiempo_servidores[serv2] == max) return false;
-
-        if (tiempo_anterior1 == max || tiempo_anterior2 == max) recalcular_max();
-        else {
-            if (tiempo_servidores[serv1] > max) max = tiempo_servidores[serv1];
-            if (tiempo_servidores[serv2] > max) max = tiempo_servidores[serv2];
-        }
-        */
 
         return true;
     }
